@@ -1,0 +1,13 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.panelContent {
+    width: 100%;
+}
+
+.panelContent,
+.panelContent > tbody > tr > td {
+    vertical-align: top;
+}
