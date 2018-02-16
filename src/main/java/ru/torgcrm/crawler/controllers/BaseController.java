@@ -8,4 +8,6 @@ public abstract class BaseController {
     @Getter
     @Setter
     private BaseModel model;
+
+    public abstract void onSave();
 }

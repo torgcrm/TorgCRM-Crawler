@@ -11,4 +11,7 @@ public class IndexController extends BaseController {
     public IndexController(IndexModel model) {
         this.setModel(model);
     }
+
+    @Override
+    public void onSave() {}
 }

@@ -1,30 +1,42 @@
 package ru.torgcrm.crawler.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
+import ru.torgcrm.crawler.domain.Website;
 import ru.torgcrm.crawler.dto.WebsiteDTO;
+import ru.torgcrm.crawler.mappers.WebsiteMapper;
 import ru.torgcrm.crawler.model.WebsiteModel;
+import ru.torgcrm.crawler.repository.WebsiteRepository;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 @SessionScope
 public class WebsitesController extends BaseController {
-    public WebsitesController(WebsiteModel websiteModel) {
+
+    @Autowired
+    private WebsiteRepository websiteRepository;
+    private WebsiteMapper websiteMapper;
+
+    public WebsitesController(WebsiteModel websiteModel,
+                              WebsiteMapper websiteMapper) {
         this.setModel(websiteModel);
+        this.websiteMapper = websiteMapper;
     }
 
     public void loadWebsites() {
         WebsiteModel model = (WebsiteModel) this.getModel();
-        List<WebsiteDTO> websites = Stream.generate(WebsiteDTO::new)
-                .limit(10).collect(Collectors.toList());
-        websites.forEach(website -> {
-            website.setId(1L);
-            website.setName("Website");
-            website.setUrl("http://ya.ru");
-        });
+        List<WebsiteDTO> websites = Collections.EMPTY_LIST;
         model.setWebsites(websites);
+    }
+
+    @Override
+    public void onSave() {
+        WebsiteModel websiteModel = (WebsiteModel) this.getModel();
+        WebsiteDTO websiteDTO = websiteModel.getWebsite();
+        Website website = websiteMapper.toEntity(websiteDTO);
+        websiteRepository.save(website);
     }
 }
