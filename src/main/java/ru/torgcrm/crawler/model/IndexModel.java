@@ -1,13 +1,14 @@
-package ru.torgcrm.crawler.view;
+package ru.torgcrm.crawler.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
-
 @Component
 @SessionScope
-public class IndexViewModel {
+public class IndexModel extends BaseModel {
     @Getter
-    private String hello = "Hello222";
+    @Setter
+    private String indexHello = "Hello index";
 }

@@ -9,25 +9,24 @@
 >
 <f:view contentType="text/html">
     <h:head>
-        <title>Settings</title>
+        <title>Field types</title>
         <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{websitesController.loadWebsites}"/>
+        </f:metadata>
     </h:head>
     <h:body>
         <h:form>
-            <p:panelGrid styleClass="panelContent">
-                <p:row>
-                    <p:column style="width: 200px">
-                        <ui:include src="parts/menu.xhtml"/>
-                    </p:column>
-                    <p:column>
-                        <p:panel header="Settings">
+            <p:layout>
+                <p:layoutUnit position="west" resizable="false">
+                    <ui:include src="/parts/menu.xhtml"/>
+                </p:layoutUnit>
+                <p:layoutUnit position="center">
 
-                        </p:panel>
-                    </p:column>
-                </p:row>
-            </p:panelGrid>
+                </p:layoutUnit>
+            </p:layout>
         </h:form>
     </h:body>
 </f:view>

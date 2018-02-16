@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+<f:view contentType="text/html">
+    <h:head>
+        <title>Websites</title>
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
+        <h:outputStylesheet library="css" name="main.css"/>
+
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{websitesController.loadWebsites}"/>
+        </f:metadata>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:layout>
+                <p:layoutUnit position="west" resizable="false">
+                    <ui:include src="../parts/menu.xhtml"/>
+                </p:layoutUnit>
+                <p:layoutUnit position="center">
+                    <p:panel id="panel" header="Add or edit website">
+
+                        <p:messages id="msgs"/>
+
+                        <h:inputHidden value="#{websitesController.model.website.id}" id="id"/>
+                        <h:panelGrid columns="3" cellpadding="5">
+                            <p:outputLabel for="name" value="Website name:"/>
+                            <p:inputText id="name" required="true"
+                                         value="#{websitesController.model.website.name}"
+                                         style="width: 450px;"
+                                         label="Website name">
+                                <f:validateLength minimum="2"/>
+                            </p:inputText>
+                            <p:message for="name" display="icon"/>
+
+                            <p:outputLabel for="url" value="Website url:"/>
+                            <p:inputText id="url"
+                                         value="#{websitesController.model.website.url}"
+                                         style="width: 450px;"
+                                         label="Website url" required="true">
+                                <f:validateLength minimum="2"/>
+                            </p:inputText>
+                            <p:message for="url" id="msgUrl" display="icon"/>
+
+                            <p:outputLabel for="code" value="Website code:"/>
+                            <p:inputText id="code"
+                                         value="#{websitesController.model.website.code}"
+                                         style="width: 450px;"
+                                         label="Website code" required="false"/>
+                            <p:message for="code" id="msgCode" display="icon"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Save"
+                                         actionListener="#{websitesController.onSave}"
+                                         update="panel" icon="ui-icon-check"/>
+                        <p:commandButton value="Cancel" onclick="window.history.back()" icon="ui-icon-cancel"/>
+                    </p:panel>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+    </h:body>
+</f:view>
+</html>
