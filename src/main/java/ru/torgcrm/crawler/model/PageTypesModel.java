@@ -2,9 +2,9 @@ package ru.torgcrm.crawler.model;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.torgcrm.crawler.dto.WebsiteDTO;
+import ru.torgcrm.crawler.dto.PageTypeDTO;
 
 @Component
 @SessionScope
-public class WebsiteModel extends BaseModel<WebsiteDTO> {
+public class PageTypesModel extends BaseModel<PageTypeDTO> {
 }

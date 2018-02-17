@@ -1,5 +1,6 @@
 package ru.torgcrm.crawler.domain;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,6 +16,9 @@ public class PageType extends Dictionary {
     @SequenceGenerator(sequenceName = SEQ_NAME, name = GEN_NAME)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
+    @Getter
+    @Setter
+    private String xpath;
 
     @Override
     public Long getId() {

@@ -6,9 +6,6 @@ import lombok.Setter;
 public class WebsiteDTO extends BaseDTO {
     @Getter
     @Setter
-    private Long id;
-    @Getter
-    @Setter
     private String name;
     @Getter
     @Setter
@@ -16,4 +13,7 @@ public class WebsiteDTO extends BaseDTO {
     @Getter
     @Setter
     private String code;
+    @Getter
+    @Setter
+    private String description;
 }

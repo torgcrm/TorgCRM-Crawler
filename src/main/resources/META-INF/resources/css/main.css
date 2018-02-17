@@ -3,6 +3,19 @@ html, body {
     padding: 0px;
 }
 
+.contentGrid {
+    width: 100%;
+}
+
+.menuCol {
+    width: 200px;
+    vertical-align: top;
+}
+
+.tableCol {
+    vertical-align: top;
+}
+
 .panelContent {
     width: 100%;
 }

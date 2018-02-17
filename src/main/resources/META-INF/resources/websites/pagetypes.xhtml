@@ -9,14 +9,13 @@
 >
 <f:view contentType="text/html">
     <h:head>
-        <title>Websites</title>
+        <title>Page types</title>
         <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
-
         <f:metadata>
-            <f:event type="postValidate" listener="#{websitesController.postValidate}"/>
-            <f:event type="postAddToView" listener="#{websitesController.postAddToView}"/>
+            <f:event type="postValidate" listener="#{pageTypesController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{pageTypesController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
@@ -26,51 +25,43 @@
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
                 <h:column>
-                    <p:dataTable id="dataTable" selectionMode="single"
+                    <p:dataTable value="#{pageTypesController.model.entityList}"
+                                 var="pageType"
+                                 id="dataTable"
+                                 selectionMode="single"
                                  paginator="true"
-                                 value="#{websitesController.model.entityList}"
-                                 var="website"
-                                 selection="#{websitesController.model.selected}"
-                                 rowKey="${website.id}">
+                                 selection="#{pageTypesController.model.selected}"
+                                 rowKey="#{pageType.id}">
                         <p:ajax event="rowSelect"
                                 update="dataTable"
-                                listener="#{websitesController.onRowSelect}"/>
+                                listener="#{pageTypesController.onRowSelect}"/>
 
-                        <f:facet name="header">Websites</f:facet>
+                        <f:facet name="header">
+                            Page types -
+                            <h:outputText value="#{websitesController.model.selected.url}"/>
+                        </f:facet>
                         <p:column headerText="Id">
-                            <h:outputText value="#{website.id}"/>
+                            <h:outputText value="#{pageType.id}"/>
                         </p:column>
-                        <p:column headerText="Name" filterable="true" filterBy="#{website.name}">
-                            <h:outputText value="#{website.name}"/>
+                        <p:column headerText="Name" filterable="true" filterBy="#{pageType.name}">
+                            <h:outputText value="#{pageType.name}"/>
                         </p:column>
-                        <p:column headerText="Url" filterable="true" filterBy="#{website.url}">
-                            <h:outputText value="#{website.url}"/>
+                        <p:column headerText="Code" filterable="true" filterBy="#{pageType.code}">
+                            <h:outputText value="#{pageType.code}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton
-                                    value="Add new website"
-                                    action="#{websitesController.onAdd}"
+                                    value="Add new pagetype"
+                                    action="#{pageTypesController.onAdd}"
                                     update="content"/>
                             <p:commandButton id="editBtn"
-                                             action="#{websitesController.onEdit}"
-                                             disabled="#{!websitesController.model.rowSelected}"
+                                             action="#{pageTypesController.onEdit}"
+                                             disabled="#{!pageTypesController.model.rowSelected}"
                                              update="content"
-                                             value="Edit selected website"/>
-                            <p:commandButton id="pageTypesBtn" value="Page types"
-                                             update="content"
-                                             disabled="#{!websitesController.model.rowSelected}"
-                                             action="#{websitesController.onPageTypes}"/>
-                            <p:commandButton id="fieldTypesBtn" value="Field types"
-                                             update="content"
-                                             disabled="#{!websitesController.model.rowSelected}"
-                                             action="#{websitesController.onFieldTypes}"/>
-                            <p:commandButton id="parsedDataBtn" value="Show parsed data"
-                                             update="content"
-                                             disabled="#{!websitesController.model.rowSelected}"
-                                             action="#{websitesController.onShowParsedData}"/>
+                                             value="Edit selected type"/>
                             <p:commandButton id="deleteButton"
-                                             action="#{websitesController.onDelete}"
-                                             disabled="#{!websitesController.model.rowSelected}"
+                                             action="#{pageTypesController.onDelete}"
+                                             disabled="#{!pageTypesController.model.rowSelected}"
                                              update="content"
                                              icon="fa fa-remove"
                                              value="Delete website">

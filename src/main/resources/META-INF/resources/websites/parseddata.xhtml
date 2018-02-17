@@ -14,19 +14,18 @@
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
         <f:metadata>
-            <f:event type="preRenderView" listener="#{websitesController.loadWebsites}"/>
+            <f:event type="postValidate" listener="#{websitesController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{websitesController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
         <h:form>
-            <p:layout>
-                <p:layoutUnit position="west" resizable="false">
-                    <ui:include src="/parts/menu.xhtml"/>
-                </p:layoutUnit>
-                <p:layoutUnit position="center">
-
-                </p:layoutUnit>
-            </p:layout>
+            <h:panelGrid columns="2" styleClass="contentGrid" columnClasses="menuCol, tableCol">
+                <h:column>
+                    <ui:include src="..//parts/menu.xhtml"/>
+                </h:column>
+                <h:column></h:column>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </f:view>

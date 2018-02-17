@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 >
 <f:view contentType="text/html">
@@ -14,19 +13,18 @@
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
         <f:metadata>
-            <f:event type="preRenderView" listener="#{websitesController.loadWebsites}"/>
+            <f:event type="postValidate" listener="#{websitesController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{websitesController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
         <h:form>
-            <p:layout>
-                <p:layoutUnit position="west" resizable="false">
+            <h:panelGrid columns="2" styleClass="contentGrid" columnClasses="menuCol, tableCol">
+                <h:column>
                     <ui:include src="/parts/menu.xhtml"/>
-                </p:layoutUnit>
-                <p:layoutUnit position="center">
-
-                </p:layoutUnit>
-            </p:layout>
+                </h:column>
+                <h:column></h:column>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </f:view>

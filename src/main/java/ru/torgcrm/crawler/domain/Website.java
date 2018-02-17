@@ -19,6 +19,9 @@ public class Website extends Dictionary {
     @Getter
     @Setter
     private String url;
+    @Getter
+    @Setter
+    private String description;
 
     @Override
     public Long getId() {

@@ -13,5 +13,22 @@ public class IndexController extends BaseController {
     }
 
     @Override
-    public void onSave() {}
+    public String onSave() {
+        return null;
+    }
+
+    @Override
+    public String onEdit() {
+        return null;
+    }
+
+    @Override
+    public String onAdd() {
+        return null;
+    }
+
+    @Override
+    public String onDelete() {
+        return null;
+    }
 }

@@ -26,50 +26,44 @@
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
                 <h:column>
-                    <p:panel id="panel" header="Add or edit website">
+                    <p:panel id="panel" header="Add or edit pagetype">
 
                         <p:messages id="msgs"/>
 
-                        <h:inputHidden value="#{websitesController.model.entity.id}" id="id"/>
+                        <h:inputHidden value="#{pageTypesController.model.entity.id}" id="id"/>
                         <h:panelGrid columns="3" cellpadding="5">
-                            <p:outputLabel for="name" value="Website name:"/>
+                            <p:outputLabel for="name" value="Type name:"/>
                             <p:inputText id="name" required="true"
-                                         value="#{websitesController.model.entity.name}"
+                                         value="#{pageTypesController.model.entity.name}"
                                          style="width: 450px;"
                                          label="Website name">
                                 <f:validateLength minimum="2"/>
                             </p:inputText>
                             <p:message for="name" display="icon"/>
 
-                            <p:outputLabel for="url" value="Website url:"/>
-                            <p:inputText id="url"
-                                         value="#{websitesController.model.entity.url}"
-                                         style="width: 450px;"
-                                         label="Website url" required="true">
-                                <f:validateLength minimum="2"/>
-                            </p:inputText>
-                            <p:message for="url" id="msgUrl" display="icon"/>
-
-                            <p:outputLabel for="code" value="Website code:"/>
+                            <p:outputLabel for="code" value="Type code:"/>
                             <p:inputText id="code"
-                                         value="#{websitesController.model.entity.code}"
+                                         value="#{pageTypesController.model.entity.code}"
                                          style="width: 450px;"
-                                         label="Website code" required="false"/>
+                                         label="Type code"
+                                         required="true"/>
                             <p:message for="code" id="msgCode" display="icon"/>
 
-                            <p:outputLabel for="description" value="Description:"/>
-                            <p:inputTextarea id="description"
-                                             value="#{websitesController.model.entity.description}"
+                            <p:outputLabel for="xpath" value="Xpath:"/>
+                            <p:inputTextarea id="xpath"
+                                             value="#{pageTypesController.model.entity.xpath}"
                                              style="width: 450px;"
-                                             label="Description" required="false"/>
-                            <p:message for="description" id="msgDescription" display="icon"/>
+                                             label="Description" required="true">
+                                <f:validateLength minimum="2"/>
+                            </p:inputTextarea>
+                            <p:message for="xpath" id="msgXpath" display="icon"/>
                         </h:panelGrid>
                         <p:commandButton value="Save"
-                                         action="#{websitesController.onSave}"
+                                         action="#{pageTypesController.onSave}"
                                          update="panel" icon="ui-icon-check"/>
-                        <p:button value="Cancel"
-                                  href="/websites/websites.xhtml"
-                                  icon="ui-icon-cancel"/>
+                        <p:commandButton value="Cancel"
+                                         action="#{pageTypesController.onCancel}"
+                                         icon="ui-icon-cancel"/>
                     </p:panel>
                 </h:column>
             </h:panelGrid>
