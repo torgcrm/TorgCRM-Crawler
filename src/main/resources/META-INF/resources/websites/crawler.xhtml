@@ -15,8 +15,8 @@
         <h:outputStylesheet library="css" name="main.css"/>
 
         <f:metadata>
-            <f:event type="postValidate" listener="#{pageTypesController.postValidate}"/>
-            <f:event type="postAddToView" listener="#{pageTypesController.postAddToView}"/>
+            <f:event type="postValidate" listener="#{websiteCrawlerController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{websiteCrawlerController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
@@ -26,15 +26,15 @@
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
                 <h:column>
-                    <p:panel id="panel" header="Add or edit page type">
+                    <p:panel id="panel" header="#{websitesController.model.selected.url.concat(' - Crawler settings')}">
 
                         <p:messages id="msgs"/>
 
-                        <h:inputHidden value="#{pageTypesController.model.entity.id}" id="id"/>
+                        <h:inputHidden value="#{fieldTypesController.model.entity.id}" id="id"/>
                         <h:panelGrid columns="3" cellpadding="5">
                             <p:outputLabel for="name" value="Type name:"/>
                             <p:inputText id="name" required="true"
-                                         value="#{pageTypesController.model.entity.name}"
+                                         value="#{fieldTypesController.model.entity.name}"
                                          style="width: 450px;"
                                          label="Website name">
                                 <f:validateLength minimum="2"/>
@@ -43,7 +43,7 @@
 
                             <p:outputLabel for="code" value="Type code:"/>
                             <p:inputText id="code"
-                                         value="#{pageTypesController.model.entity.code}"
+                                         value="#{fieldTypesController.model.entity.code}"
                                          style="width: 450px;"
                                          label="Type code"
                                          required="true"/>
@@ -51,7 +51,7 @@
 
                             <p:outputLabel for="xpath" value="Xpath:"/>
                             <p:inputTextarea id="xpath"
-                                             value="#{pageTypesController.model.entity.xpath}"
+                                             value="#{fieldTypesController.model.entity.xpath}"
                                              style="width: 450px;"
                                              label="Description" required="true">
                                 <f:validateLength minimum="2"/>
@@ -59,10 +59,10 @@
                             <p:message for="xpath" id="msgXpath" display="icon"/>
                         </h:panelGrid>
                         <p:commandButton value="Save"
-                                         action="#{pageTypesController.onSave}"
+                                         action="#{fieldTypesController.onSave}"
                                          update="panel" icon="ui-icon-check"/>
                         <p:commandButton value="Cancel"
-                                         action="#{pageTypesController.onCancel}"
+                                         action="#{fieldTypesController.onCancel}"
                                          icon="ui-icon-cancel"/>
                     </p:panel>
                 </h:column>

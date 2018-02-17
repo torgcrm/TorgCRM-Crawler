@@ -11,11 +11,9 @@ public abstract class BaseController<T extends BaseModel> {
     private T model;
 
     public void postAddToView() {
-        throw new NotImplementedException();
     }
 
     public void postValidate() {
-        throw new NotImplementedException();
     }
 
     public abstract String onSave();

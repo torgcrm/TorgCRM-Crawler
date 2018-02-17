@@ -9,22 +9,79 @@
 >
 <f:view contentType="text/html">
     <h:head>
-        <title>Field types</title>
+        <title>Page types</title>
         <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
         <f:metadata>
-            <f:event type="postValidate" listener="#{websitesController.postValidate}"/>
-            <f:event type="postAddToView" listener="#{websitesController.postAddToView}"/>
+            <f:event type="postValidate" listener="#{fieldTypesController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{fieldTypesController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
-        <h:form>
+        <h:form id="content">
             <h:panelGrid columns="2" styleClass="contentGrid" columnClasses="menuCol, tableCol">
                 <h:column>
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
-                <h:column></h:column>
+                <h:column>
+                    <p:dataTable value="#{fieldTypesController.model.entityList}"
+                                 var="fieldType"
+                                 id="dataTable"
+                                 selectionMode="single"
+                                 paginator="true"
+                                 selection="#{fieldTypesController.model.selected}"
+                                 rowKey="#{fieldType.id}">
+                        <p:ajax event="rowSelect"
+                                update="dataTable"
+                                listener="#{fieldTypesController.onRowSelect}"/>
+
+                        <f:facet name="header">
+                            Field types -
+                            <h:outputText value="#{websitesController.model.selected.url}"/>
+                        </f:facet>
+                        <p:column headerText="Id">
+                            <h:outputText value="#{fieldType.id}"/>
+                        </p:column>
+                        <p:column headerText="Name" filterable="true" filterBy="#{fieldType.name}">
+                            <h:outputText value="#{fieldType.name}"/>
+                        </p:column>
+                        <p:column headerText="Code" filterable="true" filterBy="#{fieldType.code}">
+                            <h:outputText value="#{fieldType.code}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton
+                                    value="Add new field type"
+                                    action="#{fieldTypesController.onAdd}"
+                                    update="content"/>
+                            <p:commandButton id="editBtn"
+                                             action="#{fieldTypesController.onEdit}"
+                                             disabled="#{!fieldTypesController.model.rowSelected}"
+                                             update="content"
+                                             value="Edit selected type"/>
+                            <p:commandButton id="deleteButton"
+                                             action="#{fieldTypesController.onDelete}"
+                                             disabled="#{!fieldTypesController.model.rowSelected}"
+                                             update="content"
+                                             icon="fa fa-remove"
+                                             value="Delete">
+                                <p:confirm header="Confirmation"
+                                           message="Are you sure?" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes"
+                                         type="button"
+                                         styleClass="ui-confirmdialog-yes"
+                                         icon="ui-icon-check"
+                                         update="dataTable"/>
+                        <p:commandButton value="No" type="button"
+                                         styleClass="ui-confirmdialog-no"
+                                         icon="ui-icon-close"/>
+                    </p:confirmDialog>
+                </h:column>
             </h:panelGrid>
         </h:form>
     </h:body>

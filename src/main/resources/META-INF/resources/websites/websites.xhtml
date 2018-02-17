@@ -68,12 +68,17 @@
                                              update="content"
                                              disabled="#{!websitesController.model.rowSelected}"
                                              action="#{websitesController.onShowParsedData}"/>
+                            <p:commandButton id="crawlerSettingsBtn"
+                                             value="Website crawler"
+                                             update="content"
+                                             disabled="#{!websitesController.model.rowSelected}"
+                                             action="#{websitesController.onCrawlerSettings}"/>
                             <p:commandButton id="deleteButton"
                                              action="#{websitesController.onDelete}"
                                              disabled="#{!websitesController.model.rowSelected}"
                                              update="content"
                                              icon="fa fa-remove"
-                                             value="Delete website">
+                                             value="Delete">
                                 <p:confirm header="Confirmation"
                                            message="Are you sure?" icon="ui-icon-alert"/>
                             </p:commandButton>

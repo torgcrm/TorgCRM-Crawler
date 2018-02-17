@@ -4,29 +4,33 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@Table(name = "websites")
-public class Website extends Dictionary {
-    public static final String GEN_NAME = "Gen_Website";
-    public static final String SEQ_NAME = "Seq_Website";
+@Table(name = "crawlers")
+public class Crawler extends BasicEntity {
+    public static final String GEN_NAME = "Gen_Crawler";
+    public static final String SEQ_NAME = "Seq_Crawler";
 
     @Id
     @Setter
     @SequenceGenerator(sequenceName = SEQ_NAME, name = GEN_NAME)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
-    @Getter
-    @Setter
-    private String url;
-    @Getter
-    @Setter
-    private String description;
+
     @Getter
     @Setter
     @OneToOne
     @JoinColumn(name = "website_id")
-    private Crawler crawler;
+    private Website website;
+
+    @Getter
+    @Setter
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastCrawlDate;
+    @Getter
+    @Setter
+    private String cron;
 
     @Override
     public Long getId() {
