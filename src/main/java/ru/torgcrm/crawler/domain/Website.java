@@ -24,8 +24,11 @@ public class Website extends Dictionary {
     private String description;
     @Getter
     @Setter
-    @OneToOne
-    @JoinColumn(name = "website_id")
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "website_crawler",
+            joinColumns = {@JoinColumn(name = "website_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "crawler_id", referencedColumnName = "id")}
+    )
     private Crawler crawler;
 
     @Override

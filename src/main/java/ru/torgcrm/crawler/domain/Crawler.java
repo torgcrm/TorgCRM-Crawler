@@ -20,8 +20,11 @@ public class Crawler extends BasicEntity {
 
     @Getter
     @Setter
-    @OneToOne
-    @JoinColumn(name = "website_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "website_crawler",
+            joinColumns = {@JoinColumn(name = "crawler_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "website_id", referencedColumnName = "id")}
+    )
     private Website website;
 
     @Getter

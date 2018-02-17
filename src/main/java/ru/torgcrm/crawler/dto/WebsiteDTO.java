@@ -2,6 +2,7 @@ package ru.torgcrm.crawler.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.torgcrm.crawler.domain.Crawler;
 
 public class WebsiteDTO extends BaseDTO {
     @Getter
@@ -16,4 +17,7 @@ public class WebsiteDTO extends BaseDTO {
     @Getter
     @Setter
     private String description;
+    @Getter
+    @Setter
+    private Crawler crawler;
 }

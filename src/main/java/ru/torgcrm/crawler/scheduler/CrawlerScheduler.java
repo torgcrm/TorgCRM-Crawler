@@ -1,11 +1,11 @@
 package ru.torgcrm.crawler.scheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.torgcrm.crawler.parser.WebsiteParser;
+import ru.torgcrm.crawler.parser.WebsiteParserRunnable;
 import ru.torgcrm.crawler.repository.CrawlerRepository;
 import ru.torgcrm.crawler.utils.CronUtils;
 
@@ -20,6 +20,8 @@ public class CrawlerScheduler {
     private CrawlerRepository crawlerRepository;
     @Autowired
     private TaskExecutor crawlerExecutor;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Scheduled(fixedRate = 5000)
     public void crawl() {
@@ -31,7 +33,10 @@ public class CrawlerScheduler {
                 crawler.setLastCrawlDate(new Date());
                 crawlerRepository.save(crawler);
 
-                crawlerExecutor.execute(new WebsiteParser(crawler));
+                WebsiteParserRunnable websiteParserRunnable =
+                        applicationContext.getBean(WebsiteParserRunnable.class);
+                websiteParserRunnable.setCrawler(crawler);
+                crawlerExecutor.execute(websiteParserRunnable);
             }
         });
     }

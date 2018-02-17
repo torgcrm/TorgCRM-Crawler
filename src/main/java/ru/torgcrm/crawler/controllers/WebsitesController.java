@@ -56,8 +56,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             Crawler crawler = new Crawler();
             crawler.setCron("25 23 * * *"); // every hour
             crawler.setLastCrawlDate(new Date());
-            crawlerRepository.save(crawler);
-
+//            crawlerRepository.save(crawler);
             website.setCrawler(crawler);
         }
         websiteRepository.save(website);

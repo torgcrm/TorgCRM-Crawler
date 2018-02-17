@@ -1,24 +1,25 @@
 package ru.torgcrm.crawler.parser;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import ru.torgcrm.crawler.domain.Crawler;
 import ru.torgcrm.crawler.repository.CrawlerRepository;
 
-@Configurable
-public class WebsiteParser implements Runnable {
-    private Crawler crawler;
-
+@Component
+@Scope("prototype")
+public class WebsiteParserRunnable implements Runnable {
     @Autowired
     private CrawlerRepository crawlerRepository;
-
-    public WebsiteParser(Crawler crawler) {
-        this.crawler = crawler;
-    }
+    @Getter
+    @Setter
+    private Crawler crawler;
 
     @Override
     public void run() {
-        Crawler crawler = crawlerRepository.findById(this.crawler.getId()).get();
+        System.out.println(crawler.getWebsite());
         crawler.getWebsite().getId();
     }
 }

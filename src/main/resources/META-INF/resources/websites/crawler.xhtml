@@ -30,39 +30,26 @@
 
                         <p:messages id="msgs"/>
 
-                        <h:inputHidden value="#{fieldTypesController.model.entity.id}" id="id"/>
+                        <h:inputHidden value="#{websiteCrawlerController.model.entity.id}" id="id"/>
                         <h:panelGrid columns="3" cellpadding="5">
-                            <p:outputLabel for="name" value="Type name:"/>
-                            <p:inputText id="name" required="true"
-                                         value="#{fieldTypesController.model.entity.name}"
+                            <p:outputLabel for="cron" value="Cron:"/>
+                            <p:inputText id="cron" required="true"
+                                         value="#{websiteCrawlerController.model.entity.cron}"
                                          style="width: 450px;"
                                          label="Website name">
-                                <f:validateLength minimum="2"/>
                             </p:inputText>
-                            <p:message for="name" display="icon"/>
+                            <p:message for="cron" display="icon"/>
 
-                            <p:outputLabel for="code" value="Type code:"/>
-                            <p:inputText id="code"
-                                         value="#{fieldTypesController.model.entity.code}"
-                                         style="width: 450px;"
-                                         label="Type code"
-                                         required="true"/>
-                            <p:message for="code" id="msgCode" display="icon"/>
-
-                            <p:outputLabel for="xpath" value="Xpath:"/>
-                            <p:inputTextarea id="xpath"
-                                             value="#{fieldTypesController.model.entity.xpath}"
-                                             style="width: 450px;"
-                                             label="Description" required="true">
-                                <f:validateLength minimum="2"/>
-                            </p:inputTextarea>
-                            <p:message for="xpath" id="msgXpath" display="icon"/>
+                            <p:outputLabel for="lastCrawlDate" value="Last execution date:"/>
+                            <h:outputText id="lastCrawlDate" value="#{websiteCrawlerController.model.entity.lastCrawlDate}"/>
                         </h:panelGrid>
                         <p:commandButton value="Save"
-                                         action="#{fieldTypesController.onSave}"
-                                         update="panel" icon="ui-icon-check"/>
+                                         action="#{websiteCrawlerController.onSave}"
+                                         update="panel"
+                                         icon="ui-icon-check"/>
                         <p:commandButton value="Cancel"
-                                         action="#{fieldTypesController.onCancel}"
+                                         action="#{websiteCrawlerController.onCancel}"
+                                         update="panel"
                                          icon="ui-icon-cancel"/>
                     </p:panel>
                 </h:column>
