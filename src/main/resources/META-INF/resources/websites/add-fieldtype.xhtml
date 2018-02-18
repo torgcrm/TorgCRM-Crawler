@@ -49,14 +49,14 @@
                                          required="true"/>
                             <p:message for="code" id="msgCode" display="icon"/>
 
-                            <p:outputLabel for="xpath" value="Xpath:"/>
-                            <p:inputTextarea id="xpath"
-                                             value="#{fieldTypesController.model.entity.xpath}"
+                            <p:outputLabel for="selectors" value="CSS Selectors:"/>
+                            <p:inputTextarea id="selectors"
+                                             value="#{fieldTypesController.model.entity.selectors}"
                                              style="width: 450px;"
-                                             label="Description" required="true">
+                                             label="Selectors" required="true">
                                 <f:validateLength minimum="2"/>
                             </p:inputTextarea>
-                            <p:message for="xpath" id="msgXpath" display="icon"/>
+                            <p:message for="selectors" id="msgSelectors" display="icon"/>
                         </h:panelGrid>
                         <p:commandButton value="Save"
                                          action="#{fieldTypesController.onSave}"

@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "values")
+@Table(name = "page_values")
 public class Value extends Dictionary {
     public static final String GEN_NAME = "Gen_Field";
     public static final String SEQ_NAME = "Seq_Field";
@@ -19,11 +19,8 @@ public class Value extends Dictionary {
 
     @Getter
     @Setter
+    @Lob
     private String value;
-    @Getter
-    @Setter
-    @ManyToOne
-    private Field field;
     @Getter
     @Setter
     @ManyToOne
@@ -32,6 +29,10 @@ public class Value extends Dictionary {
     @Setter
     @ManyToOne
     private Page page;
+    @Getter
+    @Setter
+    @ManyToOne
+    private Website website;
 
     @Override
     public Long getId() {

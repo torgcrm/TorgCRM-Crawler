@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import ru.torgcrm.crawler.parser.WebsiteParserRunnable;
 import ru.torgcrm.crawler.repository.CrawlerRepository;
@@ -30,9 +31,6 @@ public class CrawlerScheduler {
             ZonedDateTime ld = ZonedDateTime.ofInstant(crawler.getLastCrawlDate().toInstant(), ZoneId.systemDefault());
             if (crawler.getLastCrawlDate() == null ||
                     CronUtils.lastExecution(crawler.getCron()).compareTo(ld) >= 1) {
-                crawler.setLastCrawlDate(new Date());
-                crawlerRepository.save(crawler);
-
                 WebsiteParserRunnable websiteParserRunnable =
                         applicationContext.getBean(WebsiteParserRunnable.class);
                 websiteParserRunnable.setCrawler(crawler);

@@ -35,6 +35,7 @@ public class Page extends BasicEntity {
     private String keywords;
     @Getter
     @Setter
+    @Lob
     private String content;
     @Getter
     @Setter
@@ -45,6 +46,11 @@ public class Page extends BasicEntity {
     @Setter
     @OneToMany(mappedBy = "page")
     private List<Value> values;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "website_id")
+    private Website website;
 
     @Override
     public Long getId() {

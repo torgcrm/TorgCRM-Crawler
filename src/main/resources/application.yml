@@ -7,3 +7,9 @@ server:
   port: 9090
   servlet:
     context-path: /crawler
+
+spring:
+  security:
+    user:
+      name: user
+      password: 123

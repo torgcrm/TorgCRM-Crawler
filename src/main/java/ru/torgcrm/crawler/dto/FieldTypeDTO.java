@@ -6,5 +6,5 @@ import lombok.Setter;
 public class FieldTypeDTO extends BaseDTO {
     @Getter
     @Setter
-    private String xpath;
+    private String selectors;
 }

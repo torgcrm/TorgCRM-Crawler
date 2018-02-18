@@ -6,5 +6,5 @@ import lombok.Setter;
 public class PageTypeDTO extends BaseDTO {
     @Getter
     @Setter
-    private String xpath;
+    private String selectors;
 }

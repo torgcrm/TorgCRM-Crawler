@@ -2,16 +2,17 @@ package ru.torgcrm.crawler.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.torgcrm.crawler.domain.Crawler;
-import ru.torgcrm.crawler.domain.Website;
+import ru.torgcrm.crawler.domain.*;
 import ru.torgcrm.crawler.dto.WebsiteDTO;
 import ru.torgcrm.crawler.mappers.WebsiteMapper;
 import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.CrawlerRepository;
+import ru.torgcrm.crawler.repository.PageRepository;
+import ru.torgcrm.crawler.repository.ValueRepository;
 import ru.torgcrm.crawler.repository.WebsiteRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,10 @@ public class WebsitesController extends BaseController<WebsiteModel> {
     @Autowired
     private CrawlerRepository crawlerRepository;
     private WebsiteMapper websiteMapper;
+    @Autowired
+    private PageRepository pageRepository;
+    @Autowired
+    private ValueRepository valueRepository;
 
     public WebsitesController(WebsiteModel websiteModel,
                               WebsiteMapper websiteMapper) {
@@ -56,8 +61,54 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             Crawler crawler = new Crawler();
             crawler.setCron("25 23 * * *"); // every hour
             crawler.setLastCrawlDate(new Date());
-//            crawlerRepository.save(crawler);
             website.setCrawler(crawler);
+
+            // creating page types
+            List<PageType> types = new ArrayList<>();
+            PageType pageType = new PageType();
+            pageType.setCode(PageType.PRODUCT);
+            pageType.setName("Product");
+            pageType.setSelectors("[itemscope]");
+
+            pageType = new PageType();
+            pageType.setCode(PageType.CATALOG);
+            pageType.setName("Catalog");
+            pageType.setSelectors(".catalog");
+            types.add(pageType);
+
+            pageType = new PageType();
+            pageType.setCode(PageType.DEFAULT);
+            pageType.setName("Default");
+            pageType.setSelectors(".page");
+            types.add(pageType);
+            website.setPageTypes(types);
+
+            List<FieldType> fieldTypes = new ArrayList<>();
+            FieldType fieldType = new FieldType();
+            fieldType.setCode(FieldType.PRODUCT_NAME);
+            fieldType.setName("Product name");
+            fieldType.setSelectors(".price");
+            fieldTypes.add(fieldType);
+
+            fieldType = new FieldType();
+            fieldType.setCode(FieldType.PRODUCT_CATEGORY);
+            fieldType.setName("Product category");
+            fieldType.setSelectors(".category");
+            fieldTypes.add(fieldType);
+
+            fieldType = new FieldType();
+            fieldType.setCode(FieldType.PRODUCT_PRICE);
+            fieldType.setName("Product price");
+            fieldType.setSelectors(".price");
+            fieldTypes.add(fieldType);
+
+            fieldType = new FieldType();
+            fieldType.setCode(FieldType.PRODUCT_DESCRIPTION);
+            fieldType.setName("Product description");
+            fieldType.setSelectors(".description");
+            fieldTypes.add(fieldType);
+
+            website.setFieldTypes(fieldTypes);
         }
         websiteRepository.save(website);
         return listPage;
@@ -95,10 +146,18 @@ public class WebsitesController extends BaseController<WebsiteModel> {
     public String onPageTypes() {
         return pageTypesPage;
     }
+
     public String onFieldTypes() {
         return fieldTypesPage;
     }
+
     public String onShowParsedData() {
+        List<Page> pages = pageRepository.findByWebsiteId(getModel().getSelected().getId());
+        System.out.println(pages.size());
+        List<Value> values = valueRepository.findAll();
+        for (Value v : values) {
+            System.out.println(v.getFieldType().getName() + ": " + v.getValue());
+        }
         return parsedDataPage;
     }
 }

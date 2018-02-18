@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "websites")
@@ -30,6 +31,14 @@ public class Website extends Dictionary {
             inverseJoinColumns = {@JoinColumn(name = "crawler_id", referencedColumnName = "id")}
     )
     private Crawler crawler;
+    @Getter
+    @Setter
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private List<PageType> pageTypes;
+    @Getter
+    @Setter
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private List<FieldType> fieldTypes;
 
     @Override
     public Long getId() {

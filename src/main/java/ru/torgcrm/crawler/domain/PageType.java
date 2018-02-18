@@ -10,6 +10,9 @@ import javax.persistence.*;
 public class PageType extends Dictionary {
     public static final String GEN_NAME = "Gen_PageType";
     public static final String SEQ_NAME = "Seq_PageType";
+    public static final String PRODUCT = "product";
+    public static final String CATALOG = "catalog";
+    public static final String DEFAULT = "default";
 
     @Id
     @Setter
@@ -18,7 +21,12 @@ public class PageType extends Dictionary {
     private Long id;
     @Getter
     @Setter
-    private String xpath;
+    private String selectors;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "website_id")
+    private Website website;
 
     @Override
     public Long getId() {
