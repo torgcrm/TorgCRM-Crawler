@@ -22,6 +22,7 @@ public class Website extends Dictionary {
     private String url;
     @Getter
     @Setter
+    @Lob
     private String description;
     @Getter
     @Setter

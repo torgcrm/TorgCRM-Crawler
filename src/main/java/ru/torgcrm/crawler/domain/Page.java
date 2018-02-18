@@ -29,6 +29,7 @@ public class Page extends BasicEntity {
     private String title;
     @Getter
     @Setter
+    @Lob
     private String description;
     @Getter
     @Setter
