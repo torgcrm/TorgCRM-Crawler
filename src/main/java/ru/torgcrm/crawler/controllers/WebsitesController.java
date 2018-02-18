@@ -3,13 +3,13 @@ package ru.torgcrm.crawler.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.torgcrm.crawler.domain.*;
+import ru.torgcrm.crawler.domain.Crawler;
+import ru.torgcrm.crawler.domain.FieldType;
+import ru.torgcrm.crawler.domain.PageType;
+import ru.torgcrm.crawler.domain.Website;
 import ru.torgcrm.crawler.dto.WebsiteDTO;
 import ru.torgcrm.crawler.mappers.WebsiteMapper;
 import ru.torgcrm.crawler.model.WebsiteModel;
-import ru.torgcrm.crawler.repository.CrawlerRepository;
-import ru.torgcrm.crawler.repository.PageRepository;
-import ru.torgcrm.crawler.repository.ValueRepository;
 import ru.torgcrm.crawler.repository.WebsiteRepository;
 
 import java.util.ArrayList;
@@ -29,13 +29,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
 
     @Autowired
     private WebsiteRepository websiteRepository;
-    @Autowired
-    private CrawlerRepository crawlerRepository;
     private WebsiteMapper websiteMapper;
-    @Autowired
-    private PageRepository pageRepository;
-    @Autowired
-    private ValueRepository valueRepository;
 
     public WebsitesController(WebsiteModel websiteModel,
                               WebsiteMapper websiteMapper) {
@@ -69,6 +63,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             pageType.setCode(PageType.PRODUCT);
             pageType.setName("Product");
             pageType.setSelectors("[itemscope]");
+            types.add(pageType);
 
             pageType = new PageType();
             pageType.setCode(PageType.CATALOG);
@@ -87,7 +82,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             FieldType fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_NAME);
             fieldType.setName("Product name");
-            fieldType.setSelectors(".price");
+            fieldType.setSelectors("h1");
             fieldTypes.add(fieldType);
 
             fieldType = new FieldType();
@@ -152,12 +147,6 @@ public class WebsitesController extends BaseController<WebsiteModel> {
     }
 
     public String onShowParsedData() {
-        List<Page> pages = pageRepository.findByWebsiteId(getModel().getSelected().getId());
-        System.out.println(pages.size());
-        List<Value> values = valueRepository.findAll();
-        for (Value v : values) {
-            System.out.println(v.getFieldType().getName() + ": " + v.getValue());
-        }
         return parsedDataPage;
     }
 }

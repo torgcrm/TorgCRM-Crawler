@@ -14,8 +14,8 @@
         <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
         <h:outputStylesheet library="css" name="main.css"/>
         <f:metadata>
-            <f:event type="postValidate" listener="#{websitesController.postValidate}"/>
-            <f:event type="postAddToView" listener="#{websitesController.postAddToView}"/>
+            <f:event type="postValidate" listener="#{parsedDataController.postValidate}"/>
+            <f:event type="postAddToView" listener="#{parsedDataController.postAddToView}"/>
         </f:metadata>
     </h:head>
     <h:body>
@@ -24,7 +24,14 @@
                 <h:column>
                     <ui:include src="..//parts/menu.xhtml"/>
                 </h:column>
-                <h:column></h:column>
+                <p:dataTable value="#{parsedDataController.model.pageTypes}" var="type">
+                    <p:column>
+                        <h:outputText value="#{type.name}" />
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{parsedDataController.model.pageTypeCounter.get(type.code)}" />
+                    </p:column>
+                </p:dataTable>
             </h:panelGrid>
         </h:form>
     </h:body>

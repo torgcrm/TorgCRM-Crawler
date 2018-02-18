@@ -49,6 +49,9 @@
                         <p:column headerText="Code" filterable="true" filterBy="#{fieldType.code}">
                             <h:outputText value="#{fieldType.code}"/>
                         </p:column>
+                        <p:column headerText="CSS Selectors">
+                            <h:outputText value="#{fieldType.selectors}"/>
+                        </p:column>
                         <f:facet name="footer">
                             <p:commandButton
                                     value="Add new field type"

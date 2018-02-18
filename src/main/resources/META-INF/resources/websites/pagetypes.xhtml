@@ -49,6 +49,9 @@
                         <p:column headerText="Code" filterable="true" filterBy="#{pageType.code}">
                             <h:outputText value="#{pageType.code}"/>
                         </p:column>
+                        <p:column headerText="CSS selectors">
+                            <h:outputText value="#{pageType.selectors}"/>
+                        </p:column>
                         <f:facet name="footer">
                             <p:commandButton
                                     value="Add new pagetype"
