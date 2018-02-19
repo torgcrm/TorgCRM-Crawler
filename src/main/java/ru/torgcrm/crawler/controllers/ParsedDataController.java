@@ -3,6 +3,7 @@ package ru.torgcrm.crawler.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import ru.torgcrm.crawler.domain.Page;
 import ru.torgcrm.crawler.domain.PageType;
 import ru.torgcrm.crawler.domain.Website;
 import ru.torgcrm.crawler.mappers.WebsiteMapper;
@@ -11,9 +12,9 @@ import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.FieldTypeRepository;
 import ru.torgcrm.crawler.repository.PageRepository;
 import ru.torgcrm.crawler.repository.PageTypeRepository;
+import ru.torgcrm.crawler.repository.WebsiteRepository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @SessionScope
@@ -29,6 +30,8 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
     private WebsiteModel websiteModel;
     @Autowired
     private WebsiteMapper websiteMapper;
+    @Autowired
+    private WebsiteRepository websiteRepository;
 
     public ParsedDataController(ParsedDataModel parsedDataModel) {
         setModel(parsedDataModel);
@@ -36,12 +39,13 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
 
     @Override
     public void postAddToView() {
-        getModel().setPageTypes(pageTypeRepository.findAll());
-        Website website = websiteMapper.toEntity(websiteModel.getSelected());
-        for (PageType pageType : getModel().getPageTypes()) {
-            Integer count = pageRepository.countByWebsiteAndPageType(website, pageType);
-            Map<String, Integer> pageTypeCounter = new HashMap<>();
-            getModel().getPageTypeCounter().put(pageType.getCode(), count);
+        Website website = websiteRepository.findById(websiteModel.getSelected().getId()).get();
+        Map<String, Integer> pageTypeCounter = new HashMap<>();
+        getModel().setPageTypes(website.getPageTypes());
+        for (PageType pageType : website.getPageTypes()) {
+            Integer count = pageRepository.countByPageType(pageType);
+            pageTypeCounter.put(pageType.getCode(), count);
+            getModel().setPageTypeCounter(pageTypeCounter);
         }
     }
 

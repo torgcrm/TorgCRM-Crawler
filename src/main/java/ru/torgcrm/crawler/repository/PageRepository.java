@@ -16,5 +16,7 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     List<Page> findByWebsiteAndPageType(Website website, PageType pageType);
 
-    Integer countByWebsiteAndPageType(Website website, PageType pageType);
+    List<Page> findByPageType(PageType pageType);
+
+    Integer countByPageType(PageType pageType);
 }
