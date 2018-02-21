@@ -24,17 +24,25 @@
                 <h:column>
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
-                <p:dataTable value="#{parsedDataController.model.pageTypes}" var="type">
+                <p:dataTable value="#{parsedDataController.model.pagesByPageType}" var="page">
                     <f:facet name="header">
-                        <h:outputText value="Page types" />
+                        <h:outputText value="Pages" />
                     </f:facet>
-                    <p:column headerText="Page type">
-                        <p:commandLink value="#{type.name}"
-                                       action="#{parsedDataController.showPageTypePages(type.id)}"
-                                       update="content" />
+                    <p:column headerText="Page title">
+                        <h:outputText value="#{page.title}" />
                     </p:column>
-                    <p:column headerText="Count">
-                        <h:outputText value="#{parsedDataController.model.pageTypeCounter.get(type.code)}" />
+                    <p:column headerText="Page type">
+                        <h:outputText value="#{page.pageType.name}" />
+                    </p:column>
+                    <p:column headerText="Information">
+                        <h:dataTable value="#{page.values}" var="val">
+                            <h:column>
+                                <h:outputText value="#{val.name}" />
+                            </h:column>
+                            <h:column>
+                                <h:outputText value="#{val.value}" />
+                            </h:column>
+                        </h:dataTable>
                     </p:column>
                 </p:dataTable>
             </h:panelGrid>

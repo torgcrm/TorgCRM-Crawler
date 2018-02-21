@@ -14,7 +14,7 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     List<Page> findByWebsiteId(Long websiteId);
 
-    List<Page> findByWebsiteAndPageType(Website website, PageType pageType);
+    List<Page> findByWebsiteIdAndPageTypeId(Long websiteId, Long pageTypeId);
 
     List<Page> findByPageType(PageType pageType);
 

@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.torgcrm.crawler.domain.Crawler;
 import ru.torgcrm.crawler.domain.FieldType;
 import ru.torgcrm.crawler.domain.PageType;
@@ -23,6 +25,7 @@ import ru.torgcrm.crawler.repository.PageRepository;
 import ru.torgcrm.crawler.repository.PageTypeRepository;
 import ru.torgcrm.crawler.repository.ValueRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -56,6 +59,7 @@ public class WebsiteCrawler extends WebCrawler {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void visit(Page page) {
         LOGGER.info("Visit new page " + page.getWebURL());
         if (page.getParseData() instanceof HtmlParseData) {
@@ -88,8 +92,13 @@ public class WebsiteCrawler extends WebCrawler {
                     }
                 }
             }
+            if(webPage.getPageType() == null) {
+                PageType defaultPageType = pageTypeRepository.findByCode(PageType.DEFAULT);
+                webPage.setPageType(defaultPageType);
+            }
             pageRepository.save(webPage);
 
+            List<Value> values = new ArrayList<>();
             List<FieldType> fieldTypes = fieldTypeRepository.findAll();
             for (FieldType fieldType : fieldTypes) {
                 String[] selectors = fieldType.getSelectors().split(",");
@@ -100,13 +109,15 @@ public class WebsiteCrawler extends WebCrawler {
                         Value value = new Value();
                         value.setFieldType(fieldType);
                         value.setPage(webPage);
-                        value.setWebsite(crawler.getWebsite());
                         value.setValue(valueContent);
+                        values.add(value);
                         valueRepository.save(value);
                         break;
                     }
                 }
             }
+            webPage.setValues(values);
+            pageRepository.save(webPage);
 
             try {
                 TimeUnit.SECONDS.sleep(5);

@@ -2,6 +2,9 @@ package ru.torgcrm.crawler.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,6 +26,7 @@ public class Website extends Dictionary {
     @Getter
     @Setter
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Getter
     @Setter
@@ -34,12 +38,25 @@ public class Website extends Dictionary {
     private Crawler crawler;
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PageType> pageTypes;
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FieldType> fieldTypes;
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Value> values;
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL,
+            orphanRemoval = true, targetEntity = Page.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Page> pages;
 
     @Override
     public Long getId() {

@@ -2,6 +2,7 @@ package ru.torgcrm.crawler.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -20,18 +21,22 @@ public class Value extends Dictionary {
     @Getter
     @Setter
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String value;
     @Getter
     @Setter
     @ManyToOne
+    @JoinColumn(name = "field_type_id")
     private FieldType fieldType;
     @Getter
     @Setter
     @ManyToOne
+    @JoinColumn(name = "page_id")
     private Page page;
     @Getter
     @Setter
     @ManyToOne
+    @JoinColumn(name = "website_id")
     private Website website;
 
     @Override

@@ -1,14 +1,12 @@
 package ru.torgcrm.crawler.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "pages")
@@ -30,6 +28,7 @@ public class Page extends BasicEntity {
     @Getter
     @Setter
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Getter
     @Setter
@@ -37,6 +36,7 @@ public class Page extends BasicEntity {
     @Getter
     @Setter
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     @Getter
     @Setter
@@ -45,7 +45,8 @@ public class Page extends BasicEntity {
     private PageType pageType;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "page")
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Value> values;
     @Getter
     @Setter

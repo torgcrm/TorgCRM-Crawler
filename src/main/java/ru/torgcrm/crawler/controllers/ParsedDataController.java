@@ -1,5 +1,7 @@
 package ru.torgcrm.crawler.controllers;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
@@ -19,6 +21,8 @@ import java.util.*;
 @Component
 @SessionScope
 public class ParsedDataController extends BaseController<ParsedDataModel> {
+
+    private static final String pageTypePages = "/websites/pagetype-pages.xhtml";
 
     @Autowired
     private PageTypeRepository pageTypeRepository;
@@ -47,6 +51,12 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
             pageTypeCounter.put(pageType.getCode(), count);
             getModel().setPageTypeCounter(pageTypeCounter);
         }
+    }
+
+    public String showPageTypePages(Long typeId) {
+        List<Page> pages = pageRepository.findByWebsiteIdAndPageTypeId(websiteModel.getSelected().getId(), typeId);
+        getModel().setPagesByPageType(pages);
+        return pageTypePages;
     }
 
     @Override

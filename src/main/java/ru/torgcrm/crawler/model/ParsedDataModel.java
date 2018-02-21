@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import ru.torgcrm.crawler.domain.Page;
 import ru.torgcrm.crawler.domain.PageType;
 import ru.torgcrm.crawler.dto.WebsiteDTO;
 
@@ -19,4 +20,7 @@ public class ParsedDataModel extends BaseModel<WebsiteDTO> {
     @Getter
     @Setter
     private Map<String, Integer> pageTypeCounter;
+    @Getter
+    @Setter
+    private List<Page> pagesByPageType;
 }
