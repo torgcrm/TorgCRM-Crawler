@@ -27,8 +27,6 @@ public class Page extends BasicEntity {
     private String title;
     @Getter
     @Setter
-    @Lob
-    @Column(columnDefinition = "TEXT")
     private String description;
     @Getter
     @Setter
@@ -37,7 +35,7 @@ public class Page extends BasicEntity {
     @Setter
     @Lob
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private byte[] content;
     @Getter
     @Setter
     @OneToOne

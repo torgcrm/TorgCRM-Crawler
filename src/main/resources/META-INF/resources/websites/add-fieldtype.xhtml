@@ -57,12 +57,31 @@
                                 <f:validateLength minimum="2"/>
                             </p:inputTextarea>
                             <p:message for="selectors" id="msgSelectors" display="icon"/>
+
+                            <p:outputLabel for="regex" value="Regex:"/>
+                            <p:inputText id="regex"
+                                         value="#{fieldTypesController.model.entity.regex}"
+                                         style="width: 450px;"
+                                         label="Regex" />
+                            <p:message for="regex" id="msgRegex" display="icon"/>
+
+                            <p:outputLabel for="pageType" value="Page type:"/>
+                            <p:selectOneMenu id="pageType"
+                                         value="#{fieldTypesController.model.selectedPageTypeId}"
+                                         style="width: 450px;">
+                                <f:selectItem itemValue="0" itemLabel="..." />
+                                <f:selectItems value="#{fieldTypesController.model.pageTypes}"
+                                               var="pageType" itemLabel="#{pageType.name}"
+                                               itemValue="#{pageType.id}" />
+                            </p:selectOneMenu>
+                            <p:message for="pageType" id="msgPageType" display="icon"/>
                         </h:panelGrid>
                         <p:commandButton value="Save"
                                          action="#{fieldTypesController.onSave}"
                                          update="panel" icon="ui-icon-check"/>
                         <p:commandButton value="Cancel"
                                          action="#{fieldTypesController.onCancel}"
+                                         update="panel"
                                          icon="ui-icon-cancel"/>
                     </p:panel>
                 </h:column>

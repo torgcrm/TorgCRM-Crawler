@@ -27,15 +27,9 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
     @Autowired
     private PageTypeRepository pageTypeRepository;
     @Autowired
-    private FieldTypeRepository fieldTypeRepository;
-    @Autowired
     private PageRepository pageRepository;
     @Autowired
     private WebsiteModel websiteModel;
-    @Autowired
-    private WebsiteMapper websiteMapper;
-    @Autowired
-    private WebsiteRepository websiteRepository;
 
     public ParsedDataController(ParsedDataModel parsedDataModel) {
         setModel(parsedDataModel);
@@ -43,10 +37,10 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
 
     @Override
     public void postAddToView() {
-        Website website = websiteRepository.findById(websiteModel.getSelected().getId()).get();
+        List<PageType> pageTypes = pageTypeRepository.findByWebsiteId(websiteModel.getSelected().getId());
+        getModel().setPageTypes(pageTypes);
         Map<String, Integer> pageTypeCounter = new HashMap<>();
-        getModel().setPageTypes(website.getPageTypes());
-        for (PageType pageType : website.getPageTypes()) {
+        for (PageType pageType : pageTypes) {
             Integer count = pageRepository.countByPageType(pageType);
             pageTypeCounter.put(pageType.getCode(), count);
             getModel().setPageTypeCounter(pageTypeCounter);

@@ -25,8 +25,6 @@ public class Website extends Dictionary {
     private String url;
     @Getter
     @Setter
-    @Lob
-    @Column(columnDefinition = "TEXT")
     private String description;
     @Getter
     @Setter
@@ -38,22 +36,22 @@ public class Website extends Dictionary {
     private Crawler crawler;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<PageType> pageTypes;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<FieldType> fieldTypes;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Value> values;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST,
             orphanRemoval = true, targetEntity = Page.class)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Page> pages;

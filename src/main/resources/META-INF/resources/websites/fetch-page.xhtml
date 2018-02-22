@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+<f:view contentType="text/html">
+    <h:head>
+        <title>Page types</title>
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <link href="#{resource['images/favicon.ico']}" rel="shortcut icon"/>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <f:metadata>
+            <!--<f:event type="postValidate" listener="#{fieldTypesController.postValidate}"/>-->
+            <!--<f:event type="postAddToView" listener="#{fieldTypesController.postAddToView}"/>-->
+        </f:metadata>
+    </h:head>
+    <h:body>
+        <h:form id="content">
+            <h:panelGrid columns="2" styleClass="contentGrid" columnClasses="menuCol, tableCol">
+                <h:column>
+                    <ui:include src="../parts/menu.xhtml"/>
+                </h:column>
+                <h:column>
+                    <p:panel id="panel" header="Fetch page">
+                        <p:messages id="msgs"/>
+                        <h:panelGrid columns="3" cellpadding="5">
+                            <p:outputLabel for="name" value="URL:"/>
+                            <p:inputText id="name" required="true"
+                                         value="#{websitesController.model.fetchUrl}"
+                                         style="width: 450px;"
+                                         label="Website name">
+                                <f:validateLength minimum="2"/>
+                            </p:inputText>
+                        </h:panelGrid>
+                        <p:commandButton value="Fetch"
+                                         actionListener="#{websitesController.onClickFetchPage}"
+                                         update="panel" icon="ui-icon-check"/>
+
+                        <p:dataTable style="margin-top: 20px;" rendered="#{websitesController.model.fetchTableRendered}">
+                            <f:facet name="header">Result</f:facet>
+                            <p:column headerText="Field">
+
+                            </p:column>
+                            <p:column headerText="Value">
+
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:column>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</f:view>
+</html>

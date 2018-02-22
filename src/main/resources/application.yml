@@ -1,6 +1,6 @@
 jsf:
   primefaces:
-    theme: omega
+    theme: aristo
     font-awesome: true
     push-server-url:
 
@@ -20,6 +20,8 @@ spring:
     username: crawler
     password: crawler
     driverClassName: org.postgresql.Driver
+    hikari:
+      auto-commit: false
   jpa:
     hibernate:
       ddl-auto: create-drop

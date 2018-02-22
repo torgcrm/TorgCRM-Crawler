@@ -2,8 +2,11 @@ package ru.torgcrm.crawler.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "page_types")
@@ -27,6 +30,11 @@ public class PageType extends Dictionary {
     @ManyToOne
     @JoinColumn(name = "website_id")
     private Website website;
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "pageType")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<FieldType> fieldTypes;
 
     @Override
     public Long getId() {

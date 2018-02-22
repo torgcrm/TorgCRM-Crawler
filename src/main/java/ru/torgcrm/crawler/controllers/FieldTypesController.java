@@ -10,10 +10,12 @@ import ru.torgcrm.crawler.mappers.FieldTypeMapper;
 import ru.torgcrm.crawler.mappers.PageTypeMapper;
 import ru.torgcrm.crawler.model.FieldTypesModel;
 import ru.torgcrm.crawler.model.PageTypesModel;
+import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.FieldTypeRepository;
 import ru.torgcrm.crawler.repository.PageTypeRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @SessionScope
@@ -24,17 +26,26 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
 
     private FieldTypeRepository fieldTypeRepository;
     private FieldTypeMapper fieldTypeMapper;
+    private PageTypeMapper pageTypeMapper;
+    private PageTypeRepository pageTypeRepository;
+    private WebsiteModel websiteModel;
 
-    public FieldTypesController(FieldTypeRepository pageTypeRepository,
+    public FieldTypesController(PageTypeRepository pageTypeRepository,
+                                FieldTypeRepository fieldTypeRepository,
                                 FieldTypesModel fieldTypesModel,
-                                FieldTypeMapper fieldTypeMapper) {
-        this.fieldTypeRepository = pageTypeRepository;
+                                FieldTypeMapper fieldTypeMapper,
+                                PageTypeMapper pageTypeMapper,
+                                WebsiteModel websiteModel) {
+        this.pageTypeRepository = pageTypeRepository;
+        this.fieldTypeRepository = fieldTypeRepository;
         this.fieldTypeMapper = fieldTypeMapper;
+        this.websiteModel = websiteModel;
+        this.pageTypeMapper = pageTypeMapper;
         this.setModel(fieldTypesModel);
     }
 
     public void postAddToView() {
-        List<FieldTypeDTO> pageTypes = fieldTypeMapper.toDto(fieldTypeRepository.findAll());
+        List<FieldTypeDTO> pageTypes = fieldTypeMapper.toDto(fieldTypeRepository.findAllByOrderByIdDesc());
         getModel().setEntityList(pageTypes);
         getModel().setSelected(null);
     }
@@ -45,19 +56,35 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
 
     @Override
     public String onSave() {
-        fieldTypeRepository.save(fieldTypeMapper.toEntity(getModel().getEntity()));
+        FieldTypeDTO fieldTypeDTO = getModel().getEntity();
+        FieldType fieldType = fieldTypeMapper.toEntity(fieldTypeDTO);
+        Optional<PageType> pageType = pageTypeRepository.findById(getModel().getSelectedPageTypeId());
+        if (pageType.isPresent()) {
+            fieldType.setPageType(pageType.get());
+            fieldTypeRepository.save(fieldType);
+        }
         return listTypesPage;
     }
 
     @Override
     public String onEdit() {
         getModel().setEntity(getModel().getSelected());
+        initForm();
+        FieldType fieldType = fieldTypeRepository.findById(getModel().getSelected().getId()).get();
+        if (fieldType.getPageType() != null) {
+            getModel().setSelectedPageTypeId(fieldType.getPageType().getId());
+        } else {
+            getModel().setSelectedPageTypeId(null);
+        }
+
         return addFieldTypePage;
     }
 
     @Override
     public String onAdd() {
         getModel().setEntity(new FieldTypeDTO());
+        getModel().setSelectedPageTypeId(null);
+        initForm();
         return addFieldTypePage;
     }
 
@@ -72,5 +99,11 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
     @Override
     public String onCancel() {
         return listTypesPage;
+    }
+
+    public void initForm() {
+        List<PageTypeDTO> pageTypes = pageTypeMapper
+                .toDto(pageTypeRepository.findByWebsiteId(websiteModel.getSelected().getId()));
+        getModel().setPageTypes(pageTypes);
     }
 }

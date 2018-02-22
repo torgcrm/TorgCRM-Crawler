@@ -73,7 +73,7 @@ public class WebsiteCrawler extends WebCrawler {
                 webPage = new ru.torgcrm.crawler.domain.Page();
             }
 
-            webPage.setContent(htmlParseData.getText());
+            webPage.setContent(htmlParseData.getText().getBytes());
             webPage.setTitle(htmlParseData.getTitle());
             webPage.setDescription(htmlParseData.getMetaTags().get("description"));
             webPage.setKeywords(htmlParseData.getMetaTags().get("keywords"));
@@ -81,7 +81,7 @@ public class WebsiteCrawler extends WebCrawler {
             webPage.setWebsite(crawler.getWebsite());
 
             Document doc = Jsoup.parse(htmlParseData.getHtml());
-            List<PageType> pageTypes = pageTypeRepository.findAll();
+            List<PageType> pageTypes = pageTypeRepository.findByWebsiteId(crawler.getWebsite().getId());
             for (PageType pageType : pageTypes) {
                 String[] selectors = pageType.getSelectors().split(",");
                 for (String selector : selectors) {
@@ -98,9 +98,9 @@ public class WebsiteCrawler extends WebCrawler {
             }
             pageRepository.save(webPage);
 
+            List<FieldType> pageFieldTypes = fieldTypeRepository.findByPageType(webPage.getPageType());
             List<Value> values = new ArrayList<>();
-            List<FieldType> fieldTypes = fieldTypeRepository.findAll();
-            for (FieldType fieldType : fieldTypes) {
+            for (FieldType fieldType : pageFieldTypes) {
                 String[] selectors = fieldType.getSelectors().split(",");
                 for (String selector : selectors) {
                     Element el = doc.select(selector).first();
@@ -109,7 +109,11 @@ public class WebsiteCrawler extends WebCrawler {
                         Value value = new Value();
                         value.setFieldType(fieldType);
                         value.setPage(webPage);
-                        value.setValue(valueContent);
+                        if (fieldType.getRegex() != null) {
+                            value.setValue(valueContent.replaceAll(fieldType.getRegex(), ""));
+                        } else {
+                            value.setValue(valueContent);
+                        }
                         values.add(value);
                         valueRepository.save(value);
                         break;
@@ -117,7 +121,6 @@ public class WebsiteCrawler extends WebCrawler {
                 }
             }
             webPage.setValues(values);
-            pageRepository.save(webPage);
 
             try {
                 TimeUnit.SECONDS.sleep(5);

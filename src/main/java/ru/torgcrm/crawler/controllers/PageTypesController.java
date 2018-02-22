@@ -6,6 +6,7 @@ import ru.torgcrm.crawler.domain.PageType;
 import ru.torgcrm.crawler.dto.PageTypeDTO;
 import ru.torgcrm.crawler.mappers.PageTypeMapper;
 import ru.torgcrm.crawler.model.PageTypesModel;
+import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.PageTypeRepository;
 
 import java.util.List;
@@ -19,19 +20,25 @@ public class PageTypesController extends BaseController<PageTypesModel> {
 
     private PageTypeRepository pageTypeRepository;
     private PageTypeMapper pageTypeMapper;
+    private WebsiteModel websiteModel;
 
     public PageTypesController(PageTypeRepository pageTypeRepository,
                                PageTypesModel pageTypesModel,
-                               PageTypeMapper pageTypeMapper) {
+                               PageTypeMapper pageTypeMapper,
+                               WebsiteModel websiteModel) {
         this.pageTypeRepository = pageTypeRepository;
         this.pageTypeMapper = pageTypeMapper;
         this.setModel(pageTypesModel);
+        this.websiteModel = websiteModel;
     }
 
     public void postAddToView() {
-        List<PageTypeDTO> pageTypes = pageTypeMapper.toDto(pageTypeRepository.findAll());
-        getModel().setEntityList(pageTypes);
-        getModel().setSelected(null);
+        List<PageType> pageTypes = pageTypeRepository.findByWebsiteIdOrderByIdDesc(websiteModel.getSelected().getId());
+        if (pageTypes != null) {
+            List<PageTypeDTO> pageTypesDto = pageTypeMapper.toDto(pageTypes);
+            getModel().setEntityList(pageTypesDto);
+            getModel().setSelected(null);
+        }
     }
 
     public void postValidate() {

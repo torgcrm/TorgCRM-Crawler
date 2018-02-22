@@ -2,8 +2,11 @@ package ru.torgcrm.crawler.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "field_types")
@@ -28,6 +31,19 @@ public class FieldType extends Dictionary {
     @ManyToOne
     @JoinColumn(name = "website_id")
     private Website website;
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "fieldType", cascade = CascadeType.PERSIST)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Value> values;
+    @Getter
+    @Setter
+    private String regex;
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "page_type_id")
+    private PageType pageType;
 
     @Override
     public Long getId() {

@@ -21,7 +21,6 @@ public class Value extends Dictionary {
     @Getter
     @Setter
     @Lob
-    @Column(columnDefinition = "TEXT")
     private String value;
     @Getter
     @Setter

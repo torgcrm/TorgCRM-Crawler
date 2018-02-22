@@ -1,17 +1,27 @@
 package ru.torgcrm.crawler.controllers;
 
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.Page;
+import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
+import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
+import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.parser.HtmlParseData;
+import edu.uci.ics.crawler4j.url.WebURL;
+import org.apache.http.HttpStatus;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.torgcrm.crawler.domain.Crawler;
-import ru.torgcrm.crawler.domain.FieldType;
-import ru.torgcrm.crawler.domain.PageType;
-import ru.torgcrm.crawler.domain.Website;
+import ru.torgcrm.crawler.domain.*;
 import ru.torgcrm.crawler.dto.WebsiteDTO;
 import ru.torgcrm.crawler.mappers.WebsiteMapper;
 import ru.torgcrm.crawler.model.WebsiteModel;
+import ru.torgcrm.crawler.repository.PageTypeRepository;
 import ru.torgcrm.crawler.repository.WebsiteRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,9 +36,12 @@ public class WebsitesController extends BaseController<WebsiteModel> {
     private static final String fieldTypesPage = "/websites/fieldtypes.xhtml";
     private static final String parsedDataPage = "/websites/parseddata.xhtml";
     private static final String crawlerPage = "/websites/crawler.xhtml";
+    private static final String fetchPage = "/websites/fetch-page.xhtml";
 
     @Autowired
     private WebsiteRepository websiteRepository;
+    @Autowired
+    private PageTypeRepository pageTypeRepository;
     private WebsiteMapper websiteMapper;
 
     public WebsitesController(WebsiteModel websiteModel,
@@ -59,16 +72,13 @@ public class WebsitesController extends BaseController<WebsiteModel> {
 
             // creating page types
             List<PageType> types = new ArrayList<>();
-            PageType pageType = new PageType();
-            pageType.setCode(PageType.PRODUCT);
-            pageType.setName("Product");
-            pageType.setSelectors("[itemscope]");
-            types.add(pageType);
+            PageType pageType = null;
 
             pageType = new PageType();
             pageType.setCode(PageType.CATALOG);
             pageType.setName("Catalog");
             pageType.setSelectors(".catalog");
+            pageType.setWebsite(website);
             types.add(pageType);
 
             pageType = new PageType();
@@ -76,31 +86,48 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             pageType.setName("Default");
             pageType.setSelectors(".page");
             types.add(pageType);
+            pageType.setWebsite(website);
             website.setPageTypes(types);
+
+            pageType = new PageType();
+            pageType.setCode(PageType.PRODUCT);
+            pageType.setName("Product");
+            pageType.setSelectors("[itemscope]");
+            pageType.setWebsite(website);
+            types.add(pageType);
 
             List<FieldType> fieldTypes = new ArrayList<>();
             FieldType fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_NAME);
             fieldType.setName("Product name");
             fieldType.setSelectors("h1");
+            fieldType.setPageType(pageType);
+            fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
             fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_CATEGORY);
             fieldType.setName("Product category");
             fieldType.setSelectors(".category");
+            fieldType.setPageType(pageType);
+            fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
             fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_PRICE);
             fieldType.setName("Product price");
             fieldType.setSelectors(".price");
+            fieldType.setPageType(pageType);
+            fieldType.setWebsite(website);
+            fieldType.setRegex("\\D+");
             fieldTypes.add(fieldType);
 
             fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_DESCRIPTION);
             fieldType.setName("Product description");
             fieldType.setSelectors(".description");
+            fieldType.setPageType(pageType);
+            fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
             website.setFieldTypes(fieldTypes);
@@ -148,5 +175,68 @@ public class WebsitesController extends BaseController<WebsiteModel> {
 
     public String onShowParsedData() {
         return parsedDataPage;
+    }
+
+    public String onOpenFetchPageForm() {
+        return fetchPage;
+    }
+
+    public void onClickFetchPage() {
+        try {
+            String url = getModel().getFetchUrl();
+            CrawlConfig config = new CrawlConfig();
+            List<Value> values = new ArrayList<>();
+            WebURL webURL = new WebURL();
+            webURL.setURL(url);
+            PageFetcher pageFetcher = new PageFetcher(config);
+            PageFetchResult fetchResult = pageFetcher.fetchPage(webURL);
+            if (fetchResult.getStatusCode() == HttpStatus.SC_OK) {
+                Page page = new Page(webURL);
+                fetchResult.fetchContent(page, 4096);
+
+                Website actualWebsite = websiteRepository.findById(getModel().getSelected().getId()).get();
+                PageType currentPageType = null;
+                Document doc = Jsoup.parse(page.getContentCharset());
+                for (PageType pageType : actualWebsite.getPageTypes()) {
+                    String[] selectors = pageType.getSelectors().split(",");
+                    for (String selector : selectors) {
+                        Element pageTypeEl = doc.select(selector).first();
+                        if (pageTypeEl != null) {
+                            currentPageType = pageType;
+                            break;
+                        }
+                    }
+                }
+                if (currentPageType == null) {
+                    currentPageType = pageTypeRepository.findByCode(PageType.DEFAULT);
+                }
+
+                for (FieldType fieldType : currentPageType.getFieldTypes()) {
+                    String[] selectors = fieldType.getSelectors().split(",");
+                    for (String selector : selectors) {
+                        Element el = doc.select(selector).first();
+                        if (el != null) {
+                            String valueContent = el.text();
+                            Value value = new Value();
+                            value.setFieldType(fieldType);
+                            if (fieldType.getRegex() != null) {
+                                value.setValue(valueContent.replaceAll(fieldType.getRegex(), ""));
+                            } else {
+                                value.setValue(valueContent);
+                            }
+                            values.add(value);
+                            break;
+                        }
+                    }
+                }
+            }
+            System.out.println(values.size());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PageBiggerThanMaxSizeException e) {
+            e.printStackTrace();
+        }
     }
 }

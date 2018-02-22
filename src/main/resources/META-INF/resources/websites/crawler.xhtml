@@ -41,7 +41,9 @@
                             <p:message for="cron" display="icon"/>
 
                             <p:outputLabel for="lastCrawlDate" value="Last execution date:"/>
-                            <h:outputText id="lastCrawlDate" value="#{websiteCrawlerController.model.entity.lastCrawlDate}"/>
+                            <h:outputText id="lastCrawlDate" value="#{websiteCrawlerController.model.entity.lastCrawlDate}">
+                                <f:convertDateTime type="date" pattern="d.MM.yyyy hh:mm:ss"/>
+                            </h:outputText>
                         </h:panelGrid>
                         <p:commandButton value="Save"
                                          action="#{websiteCrawlerController.onSave}"

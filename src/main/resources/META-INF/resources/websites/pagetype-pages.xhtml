@@ -29,7 +29,9 @@
                         <h:outputText value="Pages" />
                     </f:facet>
                     <p:column headerText="Page title">
-                        <h:outputText value="#{page.title}" />
+                        <p:link href="#{'https://anon.to/?'.concat(page.url)}"
+                                target="_blank"
+                                value="#{page.title}" id="parsed_values" />
                     </p:column>
                     <p:column headerText="Page type">
                         <h:outputText value="#{page.pageType.name}" />
@@ -37,7 +39,7 @@
                     <p:column headerText="Information">
                         <h:dataTable value="#{page.values}" var="val">
                             <h:column>
-                                <h:outputText value="#{val.name}" />
+                                <h:outputText value="#{val.fieldType.name}" />
                             </h:column>
                             <h:column>
                                 <h:outputText value="#{val.value}" />

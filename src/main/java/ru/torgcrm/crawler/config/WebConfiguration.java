@@ -11,7 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("/", "/index.xhtml");
+        registry.addRedirectViewController("/", "/websites/websites.xhtml");
+        registry.addRedirectViewController("/index.xhtml", "/websites/websites.xhtml");
     }
 
     @Bean
