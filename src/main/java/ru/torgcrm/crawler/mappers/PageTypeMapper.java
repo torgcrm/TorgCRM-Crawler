@@ -1,6 +1,7 @@
 package ru.torgcrm.crawler.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.torgcrm.crawler.domain.FieldType;
 import ru.torgcrm.crawler.domain.PageType;
 import ru.torgcrm.crawler.domain.Website;
@@ -16,7 +17,13 @@ public interface PageTypeMapper extends BaseMapper<PageTypeDTO, PageType> {
 
     Website fromWebsiteDto(WebsiteDTO websiteDTO);
 
+    @Mapping(target = "pageType", ignore = true)
     FieldTypeDTO fieldTypeToFieldTypeDto(FieldType fieldType);
 
+    @Mapping(target = "pageType", ignore = true)
+    FieldType fieldTypeDtoToFieldType(FieldTypeDTO fieldType);
+
     List<FieldTypeDTO> fieldTypesToFieldTypeDtos(List<FieldType> fieldTypes);
+
+    List<FieldType> fieldTypeDtosToFieldTypes(List<FieldTypeDTO> fieldTypeDtos);
 }

@@ -9,13 +9,11 @@ import ru.torgcrm.crawler.dto.PageTypeDTO;
 import ru.torgcrm.crawler.mappers.FieldTypeMapper;
 import ru.torgcrm.crawler.mappers.PageTypeMapper;
 import ru.torgcrm.crawler.model.FieldTypesModel;
-import ru.torgcrm.crawler.model.PageTypesModel;
 import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.FieldTypeRepository;
 import ru.torgcrm.crawler.repository.PageTypeRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @SessionScope
@@ -45,9 +43,14 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
     }
 
     public void postAddToView() {
-        List<FieldTypeDTO> pageTypes = fieldTypeMapper.toDto(fieldTypeRepository.findAllByOrderByIdDesc());
-        getModel().setEntityList(pageTypes);
-        getModel().setSelected(null);
+        List<FieldType> fieldTypes = fieldTypeRepository
+                .findByWebsiteIdOrderByIdDesc(websiteModel.getSelected().getId());
+        if (fieldTypes != null) {
+            List<FieldTypeDTO> fieldTypeDtos = fieldTypeMapper.toDto(fieldTypes);
+            getModel().setEntityList(fieldTypeDtos);
+            getModel().setSelected(null);
+            getModel().setEntity(null);
+        }
     }
 
     public void postValidate() {
@@ -56,25 +59,19 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
 
     @Override
     public String onSave() {
-        FieldTypeDTO fieldTypeDTO = getModel().getEntity();
-        FieldType fieldType = fieldTypeMapper.toEntity(fieldTypeDTO);
-        Optional<PageType> pageType = pageTypeRepository.findById(getModel().getSelectedPageTypeId());
-        if (pageType.isPresent()) {
-            fieldType.setPageType(pageType.get());
-            fieldTypeRepository.save(fieldType);
-        }
+        FieldType fieldType = fieldTypeMapper.toEntity(getModel().getEntity());
+        fieldType.setPageType(pageTypeRepository.
+                findById(getModel().getSelectedPageTypeId()).get());
+        fieldTypeRepository.save(fieldType);
         return listTypesPage;
     }
 
     @Override
     public String onEdit() {
-        getModel().setEntity(getModel().getSelected());
         initForm();
-        FieldType fieldType = fieldTypeRepository.findById(getModel().getSelected().getId()).get();
-        if (fieldType.getPageType() != null) {
-            getModel().setSelectedPageTypeId(fieldType.getPageType().getId());
-        } else {
-            getModel().setSelectedPageTypeId(null);
+        getModel().setEntity(getModel().getSelected());
+        if (getModel().getSelected().getPageType() != null) {
+            getModel().setSelectedPageTypeId(getModel().getSelected().getPageType().getId());
         }
 
         return addFieldTypePage;

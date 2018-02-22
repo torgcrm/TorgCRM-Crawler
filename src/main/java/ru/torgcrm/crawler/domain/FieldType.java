@@ -42,7 +42,7 @@ public class FieldType extends Dictionary {
     @Getter
     @Setter
     @ManyToOne
-    @JoinColumn(name = "page_type_id")
+    @JoinColumn(name = "page_type_id", referencedColumnName = "id")
     private PageType pageType;
 
     @Override

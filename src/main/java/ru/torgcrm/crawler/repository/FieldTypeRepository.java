@@ -14,5 +14,7 @@ public interface FieldTypeRepository extends JpaRepository<FieldType, Long> {
 
     List<FieldType> findByWebsiteId(Long websiteId);
 
+    List<FieldType> findByWebsiteIdOrderByIdDesc(Long websiteId);
+
     List<FieldType> findByPageType(PageType pageType);
 }

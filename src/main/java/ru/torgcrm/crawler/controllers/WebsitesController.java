@@ -85,9 +85,8 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             pageType.setCode(PageType.DEFAULT);
             pageType.setName("Default");
             pageType.setSelectors(".page");
-            types.add(pageType);
             pageType.setWebsite(website);
-            website.setPageTypes(types);
+            types.add(pageType);
 
             pageType = new PageType();
             pageType.setCode(PageType.PRODUCT);
@@ -95,13 +94,13 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             pageType.setSelectors("[itemscope]");
             pageType.setWebsite(website);
             types.add(pageType);
+            website.setPageTypes(types);
 
             List<FieldType> fieldTypes = new ArrayList<>();
             FieldType fieldType = new FieldType();
             fieldType.setCode(FieldType.PRODUCT_NAME);
             fieldType.setName("Product name");
             fieldType.setSelectors("h1");
-            fieldType.setPageType(pageType);
             fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
@@ -130,6 +129,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
+            pageType.setFieldTypes(fieldTypes);
             website.setFieldTypes(fieldTypes);
         }
         websiteRepository.save(website);
@@ -192,11 +192,11 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             PageFetchResult fetchResult = pageFetcher.fetchPage(webURL);
             if (fetchResult.getStatusCode() == HttpStatus.SC_OK) {
                 Page page = new Page(webURL);
-                fetchResult.fetchContent(page, 4096);
+                fetchResult.fetchContent(page, 4096*1024);
 
                 Website actualWebsite = websiteRepository.findById(getModel().getSelected().getId()).get();
                 PageType currentPageType = null;
-                Document doc = Jsoup.parse(page.getContentCharset());
+                Document doc = Jsoup.parse(new String(page.getContentData()));
                 for (PageType pageType : actualWebsite.getPageTypes()) {
                     String[] selectors = pageType.getSelectors().split(",");
                     for (String selector : selectors) {
@@ -225,6 +225,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
                                 value.setValue(valueContent);
                             }
                             values.add(value);
+                            System.out.println(value.getValue());
                             break;
                         }
                     }

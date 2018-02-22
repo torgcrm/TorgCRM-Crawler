@@ -51,8 +51,7 @@ public class Website extends Dictionary {
     private List<Value> values;
     @Getter
     @Setter
-    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST,
-            orphanRemoval = true, targetEntity = Page.class)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Page> pages;
 
