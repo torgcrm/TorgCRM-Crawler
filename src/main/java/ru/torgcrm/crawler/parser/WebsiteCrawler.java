@@ -28,6 +28,7 @@ import ru.torgcrm.crawler.repository.ValueRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
@@ -109,8 +110,13 @@ public class WebsiteCrawler extends WebCrawler {
                         Value value = new Value();
                         value.setFieldType(fieldType);
                         value.setPage(webPage);
-                        if (fieldType.getRegex() != null) {
-                            value.setValue(valueContent.replaceAll(fieldType.getRegex(), ""));
+                        if (fieldType.getRegex() != null && !fieldType.getRegex().isEmpty()) {
+                            Pattern r = Pattern.compile(fieldType.getRegex());
+                            Matcher m = r.matcher(valueContent);
+                            if (m.find()) {
+                                int group = m.groupCount() > 1 ? m.groupCount() - 1 : 0;
+                                value.setValue(m.group(group));
+                            }
                         } else {
                             value.setValue(valueContent);
                         }

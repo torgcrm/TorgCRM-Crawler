@@ -5,7 +5,6 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.exceptions.PageBiggerThanMaxSizeException;
 import edu.uci.ics.crawler4j.fetcher.PageFetchResult;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @SessionScope
@@ -101,6 +102,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             fieldType.setCode(FieldType.PRODUCT_NAME);
             fieldType.setName("Product name");
             fieldType.setSelectors("h1");
+            fieldType.setPageType(pageType);
             fieldType.setWebsite(website);
             fieldTypes.add(fieldType);
 
@@ -178,6 +180,9 @@ public class WebsitesController extends BaseController<WebsiteModel> {
     }
 
     public String onOpenFetchPageForm() {
+        getModel().setFetchedValues(null);
+        getModel().setFetchUrl(null);
+        getModel().setFetchTableRendered(false);
         return fetchPage;
     }
 
@@ -192,7 +197,7 @@ public class WebsitesController extends BaseController<WebsiteModel> {
             PageFetchResult fetchResult = pageFetcher.fetchPage(webURL);
             if (fetchResult.getStatusCode() == HttpStatus.SC_OK) {
                 Page page = new Page(webURL);
-                fetchResult.fetchContent(page, 4096*1024);
+                fetchResult.fetchContent(page, 4096 * 1024);
 
                 Website actualWebsite = websiteRepository.findById(getModel().getSelected().getId()).get();
                 PageType currentPageType = null;
@@ -219,19 +224,24 @@ public class WebsitesController extends BaseController<WebsiteModel> {
                             String valueContent = el.text();
                             Value value = new Value();
                             value.setFieldType(fieldType);
-                            if (fieldType.getRegex() != null) {
-                                value.setValue(valueContent.replaceAll(fieldType.getRegex(), ""));
+                            if (fieldType.getRegex() != null && !fieldType.getRegex().isEmpty()) {
+                                Pattern r = Pattern.compile(fieldType.getRegex());
+                                Matcher m = r.matcher(valueContent);
+                                if (m.find()) {
+                                    int group = m.groupCount() > 1 ? m.groupCount() - 1 : 0;
+                                    value.setValue(m.group(group));
+                                }
                             } else {
                                 value.setValue(valueContent);
                             }
                             values.add(value);
-                            System.out.println(value.getValue());
                             break;
                         }
                     }
                 }
             }
-            System.out.println(values.size());
+            getModel().setFetchedValues(values);
+            getModel().setFetchTableRendered(values.size() > 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

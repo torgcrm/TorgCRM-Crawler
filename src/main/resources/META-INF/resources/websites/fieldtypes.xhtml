@@ -29,9 +29,11 @@
                                  var="fieldType"
                                  id="dataTable"
                                  selectionMode="single"
-                                 paginator="true"
                                  selection="#{fieldTypesController.model.selected}"
-                                 rowKey="#{fieldType.id}">
+                                 paginator="true"
+                                 rows="5"
+                                 rowsPerPageTemplate="5, 10, 15"
+                                 rowKey="#{fieldType.id}"  >
                         <p:ajax event="rowSelect"
                                 update="dataTable"
                                 listener="#{fieldTypesController.onRowSelect}"/>
@@ -40,8 +42,8 @@
                             Field types -
                             <h:outputText value="#{websitesController.model.selected.url}"/>
                         </f:facet>
-                        <p:column headerText="Id">
-                            <h:outputText value="#{fieldType.id}"/>
+                        <p:column headerText="Id" sortBy="#{fieldType.id}">
+                            <h:outputText value="#{fieldType.id}" />
                         </p:column>
                         <p:column headerText="Name" filterable="true" filterBy="#{fieldType.name}">
                             <h:outputText value="#{fieldType.name}"/>
@@ -54,6 +56,9 @@
                         </p:column>
                         <p:column headerText="Regex">
                             <h:outputText value="#{fieldType.regex}"/>
+                        </p:column>
+                        <p:column headerText="Page type" sortBy="#{fieldType.pageType.name}">
+                            <h:outputText value="#{fieldType.pageType.name}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton

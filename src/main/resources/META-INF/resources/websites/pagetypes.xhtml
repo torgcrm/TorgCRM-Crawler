@@ -30,6 +30,8 @@
                                  id="dataTable"
                                  selectionMode="single"
                                  paginator="true"
+                                 rows="5"
+                                 rowsPerPageTemplate="5, 10, 15"
                                  selection="#{pageTypesController.model.selected}"
                                  rowKey="#{pageType.id}">
                         <p:ajax event="rowSelect"

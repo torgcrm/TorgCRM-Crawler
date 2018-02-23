@@ -28,6 +28,8 @@
                 <h:column>
                     <p:dataTable id="dataTable" selectionMode="single"
                                  paginator="true"
+                                 rows="5"
+                                 rowsPerPageTemplate="5, 10, 15"
                                  value="#{websitesController.model.entityList}"
                                  var="website"
                                  selection="#{websitesController.model.selected}"

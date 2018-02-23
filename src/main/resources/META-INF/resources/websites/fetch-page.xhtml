@@ -40,13 +40,16 @@
                                          actionListener="#{websitesController.onClickFetchPage}"
                                          update="panel" icon="ui-icon-check"/>
 
-                        <p:dataTable style="margin-top: 20px;" rendered="#{websitesController.model.fetchTableRendered}">
+                        <p:dataTable style="margin-top: 20px;"
+                                     value="#{websitesController.model.fetchedValues}"
+                                     var="val"
+                                     rendered="#{websitesController.model.fetchTableRendered}">
                             <f:facet name="header">Result</f:facet>
                             <p:column headerText="Field">
-
+                                <h:outputText value="#{val.fieldType.name}" />
                             </p:column>
                             <p:column headerText="Value">
-
+                                <h:outputText value="#{val.value}" />
                             </p:column>
                         </p:dataTable>
                     </p:panel>

@@ -1,13 +1,14 @@
 package ru.torgcrm.crawler.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.torgcrm.crawler.domain.FieldType;
-import ru.torgcrm.crawler.domain.PageType;
 import ru.torgcrm.crawler.dto.FieldTypeDTO;
 import ru.torgcrm.crawler.dto.PageTypeDTO;
 import ru.torgcrm.crawler.mappers.FieldTypeMapper;
 import ru.torgcrm.crawler.mappers.PageTypeMapper;
+import ru.torgcrm.crawler.mappers.WebsiteMapper;
 import ru.torgcrm.crawler.model.FieldTypesModel;
 import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.FieldTypeRepository;
@@ -27,6 +28,8 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
     private PageTypeMapper pageTypeMapper;
     private PageTypeRepository pageTypeRepository;
     private WebsiteModel websiteModel;
+    @Autowired
+    private WebsiteMapper websiteMapper;
 
     public FieldTypesController(PageTypeRepository pageTypeRepository,
                                 FieldTypeRepository fieldTypeRepository,
@@ -62,6 +65,7 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
         FieldType fieldType = fieldTypeMapper.toEntity(getModel().getEntity());
         fieldType.setPageType(pageTypeRepository.
                 findById(getModel().getSelectedPageTypeId()).get());
+        fieldType.setWebsite(websiteMapper.toEntity(websiteModel.getSelected()));
         fieldTypeRepository.save(fieldType);
         return listTypesPage;
     }
@@ -70,6 +74,7 @@ public class FieldTypesController extends BaseController<FieldTypesModel> {
     public String onEdit() {
         initForm();
         getModel().setEntity(getModel().getSelected());
+        getModel().setSelectedPageTypeId(null);
         if (getModel().getSelected().getPageType() != null) {
             getModel().setSelectedPageTypeId(getModel().getSelected().getPageType().getId());
         }
