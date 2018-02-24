@@ -34,6 +34,7 @@
                         <h:outputText value="Pages" />
                     </f:facet>
                     <p:column headerText="Page title"
+                              style="vertical-align: top"
                               filterMatchMode="contains"
                               filterBy="#{page.title}"
                               filterable="true">
@@ -41,10 +42,10 @@
                                 target="_blank"
                                 value="#{page.title}" id="parsed_values" />
                     </p:column>
-                    <p:column headerText="Page type" width="10%">
+                    <p:column headerText="Page type" width="10%" style="vertical-align: top">
                         <h:outputText value="#{page.pageType.name}" />
                     </p:column>
-                    <p:column headerText="Information">
+                    <p:column headerText="Information" style="vertical-align: top">
                         <h:dataTable value="#{page.values}" var="val">
                             <h:column>
                                 <h:outputText value="#{val.fieldType.name}" />
