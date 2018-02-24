@@ -16,7 +16,7 @@ spring:
       password: 123
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:32769/crawler
+    url: jdbc:postgresql://localhost:32770/crawler
     username: crawler
     password: crawler
     driverClassName: org.postgresql.Driver
@@ -25,7 +25,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQL9Dialect
-      show_sql: true
-    properties.hibernate.temp.use_jdbc_metadata_defaults: false
-
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true

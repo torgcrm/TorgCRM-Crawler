@@ -107,9 +107,13 @@ public class WebsiteCrawler extends WebCrawler {
                     Element el = doc.select(selector).first();
                     if (el != null) {
                         String valueContent = el.text();
-                        Value value = new Value();
+                        Value value = valueRepository.findFirstByFieldTypeAndPage(fieldType, webPage);
+                        if (value == null) {
+                            value = new Value();
+                        }
                         value.setFieldType(fieldType);
                         value.setPage(webPage);
+                        value.setWebsite(crawler.getWebsite());
                         if (fieldType.getRegex() != null && !fieldType.getRegex().isEmpty()) {
                             Pattern r = Pattern.compile(fieldType.getRegex());
                             Matcher m = r.matcher(valueContent);
@@ -126,7 +130,6 @@ public class WebsiteCrawler extends WebCrawler {
                     }
                 }
             }
-            webPage.setValues(values);
 
             try {
                 TimeUnit.SECONDS.sleep(5);
