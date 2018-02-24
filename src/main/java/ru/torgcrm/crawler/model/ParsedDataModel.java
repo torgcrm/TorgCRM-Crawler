@@ -23,4 +23,8 @@ public class ParsedDataModel extends BaseModel<WebsiteDTO> {
     @Getter
     @Setter
     private List<Page> pagesByPageType;
+    @Getter
+    @Setter
+    private PagesLazyModel pagesLazyModel;
+
 }

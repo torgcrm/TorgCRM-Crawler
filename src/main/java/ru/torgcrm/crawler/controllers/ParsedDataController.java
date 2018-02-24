@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.torgcrm.crawler.domain.Page;
 import ru.torgcrm.crawler.domain.PageType;
+import ru.torgcrm.crawler.model.PagesLazyModel;
 import ru.torgcrm.crawler.model.ParsedDataModel;
 import ru.torgcrm.crawler.model.WebsiteModel;
 import ru.torgcrm.crawler.repository.PageRepository;
@@ -28,6 +28,8 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
     private PageRepository pageRepository;
     @Autowired
     private WebsiteModel websiteModel;
+    @Autowired
+    private PagesLazyModel pagesLazyModel;
 
     public ParsedDataController(ParsedDataModel parsedDataModel) {
         setModel(parsedDataModel);
@@ -46,10 +48,10 @@ public class ParsedDataController extends BaseController<ParsedDataModel> {
         }
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     public String showPageTypePages(Long typeId) {
-        List<Page> pages = pageRepository.findByWebsiteIdAndPageTypeId(websiteModel.getSelected().getId(), typeId);
-        getModel().setPagesByPageType(pages);
+//        List<Page> pages = pageRepository.findByWebsiteIdAndPageTypeId(websiteModel.getSelected().getId(), typeId);
+        getModel().setPagesLazyModel(pagesLazyModel);
+        pagesLazyModel.setPageTypeId(typeId);
         return pageTypePages;
     }
 

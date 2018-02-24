@@ -24,7 +24,8 @@
                 <h:column>
                     <ui:include src="../parts/menu.xhtml"/>
                 </h:column>
-                <p:dataTable value="#{parsedDataController.model.pagesByPageType}"
+                <p:dataTable value="#{parsedDataController.model.pagesLazyModel}"
+                             lazy="true"
                              var="page"
                              paginator="true"
                              rows="5"
@@ -32,25 +33,27 @@
                     <f:facet name="header">
                         <h:outputText value="Pages" />
                     </f:facet>
-                    <p:column headerText="Page title" filterMatchMode="contains"
-                              filterBy="#{page.title}" filterable="true">
+                    <p:column headerText="Page title"
+                              filterMatchMode="contains"
+                              filterBy="#{page.title}"
+                              filterable="true">
                         <p:link href="#{'https://anon.to/?'.concat(page.url)}"
                                 target="_blank"
                                 value="#{page.title}" id="parsed_values" />
                     </p:column>
-                    <p:column headerText="Page type">
+                    <p:column headerText="Page type" width="10%">
                         <h:outputText value="#{page.pageType.name}" />
                     </p:column>
-                    <!--<p:column headerText="Information">-->
-                        <!--<h:dataTable value="#{page.values}" var="val">-->
-                            <!--<h:column>-->
-                                <!--<h:outputText value="#{val.fieldType.name}" />-->
-                            <!--</h:column>-->
-                            <!--<h:column>-->
-                                <!--<h:outputText value="#{val.value}" />-->
-                            <!--</h:column>-->
-                        <!--</h:dataTable>-->
-                    <!--</p:column>-->
+                    <p:column headerText="Information">
+                        <h:dataTable value="#{page.values}" var="val">
+                            <h:column>
+                                <h:outputText value="#{val.fieldType.name}" />
+                            </h:column>
+                            <h:column>
+                                <h:outputText value="#{val.value}" />
+                            </h:column>
+                        </h:dataTable>
+                    </p:column>
                 </p:dataTable>
             </h:panelGrid>
         </h:form>
