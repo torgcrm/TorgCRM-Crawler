@@ -2,7 +2,6 @@ jsf:
   primefaces:
     theme: aristo
     font-awesome: true
-    push-server-url:
 
 server:
   port: 9090
@@ -26,4 +25,4 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    show-sql: false
