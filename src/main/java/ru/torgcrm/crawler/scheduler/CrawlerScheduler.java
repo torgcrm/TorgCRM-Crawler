@@ -15,6 +15,7 @@ import ru.torgcrm.crawler.utils.CronUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Component
 public class CrawlerScheduler {
@@ -40,6 +41,9 @@ public class CrawlerScheduler {
                             applicationContext.getBean(WebsiteParserRunnable.class);
                     websiteParserRunnable.setCrawler(crawler);
                     crawlerExecutor.execute(websiteParserRunnable);
+
+                    crawler.setLastCrawlDate(new Date());
+                    crawlerRepository.save(crawler);
                 }
             });
         }

@@ -7,6 +7,8 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -15,12 +17,10 @@ import org.springframework.stereotype.Component;
 import ru.torgcrm.crawler.domain.Crawler;
 import ru.torgcrm.crawler.repository.CrawlerRepository;
 
-import java.util.Date;
-
 @Component
 @Scope("prototype")
 public class WebsiteParserRunnable implements Runnable {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebsiteParserRunnable.class);
     private final String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
 
     @Autowired
@@ -45,9 +45,6 @@ public class WebsiteParserRunnable implements Runnable {
     public void run() {
         Thread.currentThread().setName("Crawler: " + crawler.getWebsite().getUrl());
         try {
-            crawler.setLastCrawlDate(new Date());
-            crawlerRepository.save(crawler);
-
             String crawlStorageFolder = "/tmp/crawler";
 
             CrawlConfig config = new CrawlConfig();
@@ -67,7 +64,7 @@ public class WebsiteParserRunnable implements Runnable {
             controller.addSeed(crawler.getWebsite().getUrl());
             controller.start(websiteCrawlerFactory, numberOfCrawlers);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't visit page: " + e.getCause());
         }
     }
 }

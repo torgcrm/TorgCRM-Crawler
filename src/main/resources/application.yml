@@ -1,8 +1,8 @@
 crawler:
-  core-pool-size: 1
-  max-pool-size: 1
+  core-pool-size: 5
+  max-pool-size: 25
   queue-capacity: 25
-  quantity: 1
+  quantity: 3
   max-connections-per-host: 1
   max-total-connections: 10
   connection-timeout: 20000

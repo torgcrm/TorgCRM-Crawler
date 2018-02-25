@@ -30,6 +30,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(15);
         return executor;
     }
 }
