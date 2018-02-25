@@ -3,6 +3,7 @@ package ru.torgcrm.crawler.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,18 +26,22 @@ public class CrawlerScheduler {
     private TaskExecutor crawlerExecutor;
     @Autowired
     private ApplicationContext applicationContext;
+    @Value("${crawler.viewOnly}")
+    private Boolean viewOnly = false;
 
     @Scheduled(fixedRate = 5000)
     public void crawl() {
-        crawlerRepository.findAll().forEach(crawler -> {
-            ZonedDateTime ld = ZonedDateTime.ofInstant(crawler.getLastCrawlDate().toInstant(), ZoneId.systemDefault());
-            if (crawler.getLastCrawlDate() == null ||
-                    CronUtils.lastExecution(crawler.getCron()).compareTo(ld) >= 1) {
-                WebsiteParserRunnable websiteParserRunnable =
-                        applicationContext.getBean(WebsiteParserRunnable.class);
-                websiteParserRunnable.setCrawler(crawler);
-                crawlerExecutor.execute(websiteParserRunnable);
-            }
-        });
+        if (!viewOnly) { // run when is not view only. you can run another instance, just for view results
+            crawlerRepository.findAll().forEach(crawler -> {
+                ZonedDateTime ld = ZonedDateTime.ofInstant(crawler.getLastCrawlDate().toInstant(), ZoneId.systemDefault());
+                if (crawler.getLastCrawlDate() == null ||
+                        CronUtils.lastExecution(crawler.getCron()).compareTo(ld) >= 1) {
+                    WebsiteParserRunnable websiteParserRunnable =
+                            applicationContext.getBean(WebsiteParserRunnable.class);
+                    websiteParserRunnable.setCrawler(crawler);
+                    crawlerExecutor.execute(websiteParserRunnable);
+                }
+            });
+        }
     }
 }
