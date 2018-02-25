@@ -15,5 +15,5 @@ public interface PageTypeRepository extends JpaRepository<PageType, Long> {
 
     List<PageType> findByWebsiteIdOrderByIdDesc(Long websiteId);
 
-    PageType findByCode(String code);
+    PageType findByCodeAndWebsiteId(String code, Long websiteId);
 }

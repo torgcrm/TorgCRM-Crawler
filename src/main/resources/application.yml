@@ -28,7 +28,7 @@ spring:
       password: 123
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5432/crawler
+    url: jdbc:postgresql://localhost:32771/crawler
     username: crawler
     password: crawler
     driverClassName: org.postgresql.Driver

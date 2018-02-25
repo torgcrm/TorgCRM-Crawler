@@ -94,7 +94,8 @@ public class WebsiteCrawler extends WebCrawler {
                 }
             }
             if(webPage.getPageType() == null) {
-                PageType defaultPageType = pageTypeRepository.findByCode(PageType.DEFAULT);
+                PageType defaultPageType = pageTypeRepository.findByCodeAndWebsiteId(
+                        PageType.DEFAULT, crawler.getWebsite().getId());
                 webPage.setPageType(defaultPageType);
             }
             pageRepository.save(webPage);

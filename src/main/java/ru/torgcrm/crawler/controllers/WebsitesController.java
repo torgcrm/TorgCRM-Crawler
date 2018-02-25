@@ -213,7 +213,8 @@ public class WebsitesController extends BaseController<WebsiteModel> {
                     }
                 }
                 if (currentPageType == null) {
-                    currentPageType = pageTypeRepository.findByCode(PageType.DEFAULT);
+                    currentPageType = pageTypeRepository.findByCodeAndWebsiteId(PageType.DEFAULT,
+                            getModel().getSelected().getId());
                 }
 
                 for (FieldType fieldType : currentPageType.getFieldTypes()) {
