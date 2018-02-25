@@ -1,3 +1,13 @@
+crawler:
+  core-pool-size: 1
+  max-pool-size: 1
+  queue-capacity: 25
+  quantity: 1
+  max-connections-per-host: 1
+  max-total-connections: 10
+  connection-timeout: 20000
+  socket-timeout: 5000
+
 jsf:
   primefaces:
     theme: aristo
@@ -7,6 +17,8 @@ server:
   port: 9090
   servlet:
     context-path: /crawler
+  tomcat:
+    max-threads: 5
 
 spring:
   security:

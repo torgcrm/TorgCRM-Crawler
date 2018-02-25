@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,6 +28,7 @@ public class Website extends Dictionary {
     @Getter
     @Setter
     @OneToOne(cascade = CascadeType.PERSIST)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinTable(name = "website_crawler",
             joinColumns = {@JoinColumn(name = "website_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "crawler_id", referencedColumnName = "id")}

@@ -8,6 +8,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,16 @@ public class WebsiteParserRunnable implements Runnable {
 
     @Autowired
     private CrawlerRepository crawlerRepository;
+    @Value("${crawler.quantity}")
+    private Integer numberOfCrawlers = 1;
+    @Value("${crawler.max-connections-per-host}")
+    private Integer maxConnectionsPerHos = 1;
+    @Value("${crawler.max-total-connections}")
+    private Integer maxTotalConnections = 1;
+    @Value("${crawler.connection-timeout}")
+    private Integer connectionTimeOut = 20000;
+    @Value("${crawler.socket-timeout}")
+    private Integer socketTimeOut = 5000;
     @Getter
     @Setter
     private Crawler crawler;
@@ -38,13 +49,12 @@ public class WebsiteParserRunnable implements Runnable {
             crawlerRepository.save(crawler);
 
             String crawlStorageFolder = "/tmp/crawler";
-            int numberOfCrawlers = 5; // thread count to parse website
 
             CrawlConfig config = new CrawlConfig();
-            config.setMaxConnectionsPerHost(1);
-            config.setMaxTotalConnections(1);
-            config.setConnectionTimeout(20000);
-            config.setSocketTimeout(5000);
+            config.setMaxConnectionsPerHost(maxConnectionsPerHos);
+            config.setMaxTotalConnections(maxTotalConnections);
+            config.setConnectionTimeout(connectionTimeOut);
+            config.setSocketTimeout(socketTimeOut);
             config.setCrawlStorageFolder(crawlStorageFolder);
 
             PageFetcher pageFetcher = new PageFetcher(config);

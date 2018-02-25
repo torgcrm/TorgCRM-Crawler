@@ -1,5 +1,6 @@
 package ru.torgcrm.crawler.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -9,6 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
+
+    @Value("${crawler.core-pool-size}")
+    Integer corePoolSize;
+    @Value("${crawler.max-pool-size}")
+    Integer maxPoolSize;
+    @Value("${crawler.max-pool-size}")
+    Integer queueCapacity;
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/websites/websites.xhtml");
@@ -18,10 +27,9 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Bean
     public TaskExecutor crawlerExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(25);
-        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueCapacity);
         return executor;
     }
 }
