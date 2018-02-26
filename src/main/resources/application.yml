@@ -8,6 +8,7 @@ crawler:
   connection-timeout: 20000
   socket-timeout: 5000
   viewOnly: false
+  maximumCrawlers: 1
 
 jsf:
   primefaces:

@@ -16,6 +16,7 @@ import ru.torgcrm.crawler.utils.CronUtils;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Component
 public class CrawlerScheduler {
@@ -29,21 +30,36 @@ public class CrawlerScheduler {
     private ApplicationContext applicationContext;
     @Value("${crawler.viewOnly}")
     private Boolean viewOnly = false;
+    @Value("${crawler.maximumCrawlers}")
+    private Integer maximumCrawlers = 1;
 
     @Scheduled(fixedRate = 5000)
     public void crawl() {
+        if (maximumCrawlers == 1) {
+            Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+            for (Thread thread : threadSet) {
+                if (thread.getName().startsWith("Crawler:")) {
+                    return;
+                }
+            }
+        }
+
         if (!viewOnly) { // run when is not view only. you can run another instance, just for view results
             crawlerRepository.findAll().forEach(crawler -> {
                 ZonedDateTime ld = ZonedDateTime.ofInstant(crawler.getLastCrawlDate().toInstant(), ZoneId.systemDefault());
                 if (crawler.getLastCrawlDate() == null ||
                         CronUtils.lastExecution(crawler.getCron()).compareTo(ld) >= 1) {
-                    WebsiteParserRunnable websiteParserRunnable =
-                            applicationContext.getBean(WebsiteParserRunnable.class);
-                    websiteParserRunnable.setCrawler(crawler);
-                    crawlerExecutor.execute(websiteParserRunnable);
+                    try {
+                        WebsiteParserRunnable websiteParserRunnable =
+                                applicationContext.getBean(WebsiteParserRunnable.class);
+                        websiteParserRunnable.setCrawler(crawler);
+                        crawlerExecutor.execute(websiteParserRunnable);
 
-                    crawler.setLastCrawlDate(new Date());
-                    crawlerRepository.save(crawler);
+                        crawler.setLastCrawlDate(new Date());
+                        crawlerRepository.save(crawler);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
